@@ -51,7 +51,7 @@ public class AuctionController {
 
     @GetMapping("/teams")
     public List<AuctionTeamsResponseDTO> getAuctionTeams() {
-        System.out.println("Received request to get Auction Teams");
+        System.out.println("Received request to get Auction Teams.");
         return Arrays.asList(AuctionTeamsResponseDTO.builder()
                 .teamId(1).teamName("India").purse(1000).build(),AuctionTeamsResponseDTO.builder()
                 .teamId(1).teamName("Australia").purse(800).build(),AuctionTeamsResponseDTO.builder()
