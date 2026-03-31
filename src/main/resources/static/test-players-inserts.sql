@@ -1,0 +1,98 @@
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Virat Kohli', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Steve Smith', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Joe Root', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Kane Williamson', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Babar Azam', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('David Warner', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Rohit Sharma', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Jos Buttler', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Ben Stokes', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Glenn Maxwell', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Shubman Gill', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('KL Rahul', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Hardik Pandya', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Rashid Khan', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mohammad Rizwan', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Shaheen Afridi', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Trent Boult', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mitchell Starc', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Pat Cummins', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Josh Hazlewood', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Quinton de Kock', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Kagiso Rabada', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Faf du Plessis', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('AB de Villiers', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Anrich Nortje', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Shakib Al Hasan', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mushfiqur Rahim', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Tamim Iqbal', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Litton Das', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mustafizur Rahman', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Jason Holder', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Nicholas Pooran', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Andre Russell', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Kieron Pollard', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Chris Gayle', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Shimron Hetmyer', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Alzarri Joseph', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Sunil Narine', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Dwayne Bravo', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Carlos Brathwaite', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('MS Dhoni', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Ravindra Jadeja', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Ravichandran Ashwin', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Yuzvendra Chahal', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Kuldeep Yadav', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Jasprit Bumrah', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mohammed Shami', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mohammed Siraj', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Deepak Chahar', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Bhuvneshwar Kumar', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Eoin Morgan', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Jonny Bairstow', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mark Wood', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Jofra Archer', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Sam Curran', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Tom Curran', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Adil Rashid', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Moeen Ali', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Alex Hales', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Dawid Malan', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Aaron Finch', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Marcus Stoinis', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Cameron Green', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Marnus Labuschagne', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Adam Zampa', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Nathan Lyon', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Matthew Wade', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Tim David', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Usman Khawaja', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Travis Head', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Dimuth Karunaratne', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Kusal Mendis', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Wanindu Hasaranga', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Dasun Shanaka', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Angelo Mathews', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Pathum Nissanka', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Dhananjaya de Silva', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Maheesh Theekshana', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Lahiru Kumara', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Kasun Rajitha', 2, NULL);
+
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Paul Stirling', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Andrew Balbirnie', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Josh Little', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Curtis Campher', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('George Dockrell', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Harry Tector', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Lorcan Tucker', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Mark Adair', 2, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Barry McCarthy', 1, NULL);
+INSERT INTO mpl.players (player_name, team_id, user_id) VALUES ('Gareth Delany', 2, NULL);
