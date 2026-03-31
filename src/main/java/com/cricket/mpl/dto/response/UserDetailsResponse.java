@@ -10,5 +10,6 @@ public class UserDetailsResponse {
     private String name;
     private String team;
     private Integer userId;
+    private Integer teamId;
     private String teamStatus;
 }

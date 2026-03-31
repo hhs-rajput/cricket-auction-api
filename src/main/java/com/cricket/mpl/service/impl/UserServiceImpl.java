@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
                     .name(userObj.getName())
                     .team(team.getTeamName())
                     .teamStatus(team.getTeamStatus())
+                    .teamId(team.getId())
                     .userId(userObj.getUserId()).build();
         }
 

@@ -14,5 +14,9 @@ public interface AuctionService {
 
    List<AuctionResponseDTO> getAllAuctions();
 
+   AuctionResponseDTO getUserAuction(Integer userId, Integer teamId);
+
    AuctionResponseDTO complete(Integer auctionId);
+
+   List<AuctionResponseDTO> getUpcomingAuctions();
 }

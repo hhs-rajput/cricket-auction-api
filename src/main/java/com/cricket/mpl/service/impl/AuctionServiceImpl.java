@@ -3,7 +3,9 @@ package com.cricket.mpl.service.impl;
 import com.cricket.mpl.dto.request.AuctionRequest;
 import com.cricket.mpl.dto.response.AuctionResponseDTO;
 import com.cricket.mpl.entity.Auction;
+import com.cricket.mpl.entity.AuctionTeam;
 import com.cricket.mpl.repository.AuctionRepository;
+import com.cricket.mpl.repository.AuctionTeamRepository;
 import com.cricket.mpl.service.AuctionService;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,11 @@ import java.util.List;
 public class AuctionServiceImpl implements AuctionService {
 
     private final AuctionRepository auctionRepository;
+    private final AuctionTeamRepository auctionTeamRepository;
 
-    public AuctionServiceImpl(AuctionRepository auctionRepository) {
+    public AuctionServiceImpl(AuctionRepository auctionRepository, AuctionTeamRepository auctionTeamRepository) {
         this.auctionRepository = auctionRepository;
+        this.auctionTeamRepository = auctionTeamRepository;
     }
 
     @Override
@@ -57,9 +61,27 @@ public class AuctionServiceImpl implements AuctionService {
                         .auctionId(auction.getAuctionId())
                         .auctionDate(auction.getAuctionDate())
                         .auctionName(auction.getAuctionName())
+                        .status(auction.getStatus())
                         .isActive(auction.getIsActive()).build()).toList();
             }
         return List.of();
+    }
+
+    @Override
+    public AuctionResponseDTO getUserAuction(Integer userId, Integer teamId) {
+        AuctionTeam auctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamId(userId,teamId);
+        Auction auction = null;
+        if (auctionTeam != null) {
+            auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
+            return AuctionResponseDTO.builder()
+                    .auctionId(auction.getAuctionId())
+                    .auctionName(auction.getAuctionName())
+                    .auctionDate(auction.getAuctionDate())
+                    .status(auction.getStatus())
+                    .isActive(auction.getIsActive())
+                    .build();
+        }
+        return null;
     }
 
     @Override
@@ -69,5 +91,19 @@ public class AuctionServiceImpl implements AuctionService {
         auction.setStatus("COMPLETED");
         auctionRepository.save(auction);
         return AuctionResponseDTO.builder().auctionId(auction.getAuctionId()).isActive(auction.getIsActive()).build();
+    }
+
+    @Override
+    public List<AuctionResponseDTO> getUpcomingAuctions() {
+        List<Auction> all = auctionRepository.findByStatusAndAuctionDateAfter("NOT_STARTED",java.time.LocalDateTime.now());
+        if(!all.isEmpty()){
+            return all.stream().map(auction -> AuctionResponseDTO.builder()
+                    .auctionId(auction.getAuctionId())
+                    .auctionDate(auction.getAuctionDate())
+                    .auctionName(auction.getAuctionName())
+                    .status(auction.getStatus())
+                    .isActive(auction.getIsActive()).build()).toList();
+        }
+        return List.of();
     }
 }
