@@ -2,9 +2,11 @@ package com.cricket.mpl.controller;
 
 import com.cricket.mpl.dto.request.AuctionRequest;
 import com.cricket.mpl.dto.response.AuctionResponseDTO;
+import com.cricket.mpl.dto.response.AuctionTeamsResponseDTO;
 import com.cricket.mpl.service.AuctionService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -45,4 +47,15 @@ public class AuctionController {
     public String create(@RequestBody AuctionRequest auctionRequest){
         return auctionService.createAuction(auctionRequest);
     }
+
+    @GetMapping("/teams")
+    public List<AuctionTeamsResponseDTO> getAuctionTeams() {
+        System.out.println("Received request to get Auction Teams");
+        return Arrays.asList(AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("India").purse(1000).build(),AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("Australia").purse(800).build(),AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("South Africa").purse(700).build(),AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("England").purse(750).build());
+    }
+
 }
