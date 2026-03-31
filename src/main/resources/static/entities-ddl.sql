@@ -8,8 +8,8 @@ CREATE TABLE mpl.players (
     team_id INTEGER,
     phone_number VARCHAR(20),
     player_category VARCHAR(10),
-    user_id INTEGER,
-
+    user_id INTEGER,   
+    
     CONSTRAINT fk_player_user
         FOREIGN KEY (user_id)
         REFERENCES mpl.users(user_id)
@@ -39,8 +39,22 @@ CREATE TABLE mpl.teams (
     team_name VARCHAR(255) NOT NULL UNIQUE,
     team_size INTEGER CHECK (team_size > 0),
     team_status VARCHAR(10) NOT NULL ,
-    caption_user_id INTEGER NOT NULL UNIQUE
+    auction_joined BOOLEAN DEFAULT FALSE,
+    caption_user_id INTEGER NOT NULL unique,
+    auction_id INTEGER ,
+    total_purse INTEGER,
+	remaining_purse INTEGER
 );
+
+CREATE TABLE mpl.player_bid (
+    bid_id SERIAL PRIMARY KEY,
+    player_id INTEGER NOT NULL ,
+    team_id INTEGER  not null,
+    auction_id INTEGER  not null,
+    caption_user_id INTEGER NOT null,
+    bid_amount INTEGER
+);
+
 
 
 
