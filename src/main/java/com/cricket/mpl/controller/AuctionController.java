@@ -74,10 +74,10 @@ public class AuctionController {
     public List<AuctionTeamsResponseDTO> getAuctionTeams() {
         System.out.println("Received request to get Auction Teams.");
         return Arrays.asList(AuctionTeamsResponseDTO.builder()
-                .teamId(1).teamName("India").purse(1000).build(),AuctionTeamsResponseDTO.builder()
-                .teamId(1).teamName("Australia").purse(800).build(),AuctionTeamsResponseDTO.builder()
-                .teamId(1).teamName("South Africa").purse(700).build(),AuctionTeamsResponseDTO.builder()
-                .teamId(1).teamName("England").purse(750).build());
+                .teamId(1).teamName("India-India").purse(1000).build(),AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("Australia-Australia").purse(800).build(),AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("South Africa-South Africa").purse(700).build(),AuctionTeamsResponseDTO.builder()
+                .teamId(1).teamName("England-England").purse(750).build());
     }
 
     @GetMapping("/current-player")
