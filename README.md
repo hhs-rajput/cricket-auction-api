@@ -1,1 +1,1 @@
-This is Cricket Auctin Backend Application.
+This is Cricket Auction Backend Application.
