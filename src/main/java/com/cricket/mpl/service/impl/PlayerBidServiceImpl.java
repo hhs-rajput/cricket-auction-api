@@ -22,12 +22,14 @@ public class PlayerBidServiceImpl implements PlayerBidService {
     private final PlayerBidTransactionRepository playerBidTransactionRepository;
     private final PlayerRepository playerRepository;
     private final AuctionTeamRepository auctionTeamRepository;
+    private final AuctionWebSocketService auctionWebSocketService;
 
-    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository, AuctionTeamRepository auctionTeamRepository) {
+    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository, AuctionTeamRepository auctionTeamRepository, AuctionWebSocketService auctionWebSocketService) {
         this.playerBidRepository = playerBidRepository;
         this.playerBidTransactionRepository = playerBidTransactionRepository;
         this.playerRepository = playerRepository;
         this.auctionTeamRepository = auctionTeamRepository;
+        this.auctionWebSocketService = auctionWebSocketService;
     }
 
     @Override
@@ -80,7 +82,8 @@ public class PlayerBidServiceImpl implements PlayerBidService {
          AuctionTeam auctionTeam = auctionTeamRepository.findByAuctionIdAndTeamId(playerBidRequest.getAuctionId(), playerBidRequest.getTeamId());
         //auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse() - playerBidRequest.getBidAmount());
         //auctionTeamRepository.save(auctionTeam);
-        return PlayerBidResponse.builder()
+
+        PlayerBidResponse playerBidResponse = PlayerBidResponse.builder()
                 .playerBidId(playerBid.getPlayerBidId())
                 .playerId(playerBid.getPlayerId())
                 .auctionId(playerBid.getAuctionId())
@@ -88,6 +91,8 @@ public class PlayerBidServiceImpl implements PlayerBidService {
                 .leadingTeamName(auctionTeam.getTeamName())
                 .currentBidAmount(playerBid.getBidAmount())
                 .build();
+        auctionWebSocketService.sendBidUpdate(playerBidResponse);
+        return playerBidResponse;
 
 
     }
