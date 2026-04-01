@@ -25,4 +25,13 @@ public class AuctionTeam {
     @Column(name = "caption_user_id")
     private Integer captionUserId;
 
+    @Column(name = "team_name")
+    private String teamName;
+
+    @Column(name = "total_purse")
+    private Integer totalPurse;
+
+    @Column(name = "remaining_purse")
+    private Integer remainingPurse;
+
 }

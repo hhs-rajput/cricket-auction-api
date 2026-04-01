@@ -125,6 +125,9 @@ public class AuctionServiceImpl implements AuctionService {
         auctionTeam.setAuctionId(auctionRegisterRequest.getAuctionId());
         auctionTeam.setTeamId(auctionRegisterRequest.getTeamId());
         auctionTeam.setCaptionUserId(auctionRegisterRequest.getCaptionUserId());
+        auctionTeam.setTotalPurse(100);
+        auctionTeam.setTeamName(auctionRegisterRequest.getTeamName());
+        auctionTeam.setRemainingPurse(100);
         auctionTeamRepository.save(auctionTeam);
         return "Registered Successfully";
     }
@@ -132,15 +135,12 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public List<AuctionTeamsResponseDTO> getAuctionTeams(Integer auctionId) {
         List<AuctionTeam> auctionTeams = auctionTeamRepository.findByAuctionId(auctionId);
-        List<Integer> teamIds = auctionTeams.stream().map(AuctionTeam::getTeamId).toList();
-        List<Team> byTeamIds = teamService.findByTeamIds(teamIds);
-        Map<Integer,Team> teamMap = byTeamIds.stream().collect(Collectors.toMap(Team::getId, team -> team));
         if(!auctionTeams.isEmpty()){
             return auctionTeams.stream().map(auctionTeam -> AuctionTeamsResponseDTO.builder()
                     .teamId(auctionTeam.getTeamId())
-                    .teamName(teamMap.get(auctionTeam.getTeamId()).getTeamName())
-                    .purse(teamMap.get(auctionTeam.getTeamId()).getTotalPurse())
-                    .remainingPurse(teamMap.get(auctionTeam.getTeamId()).getRemainingPurse())
+                    .teamName(auctionTeam.getTeamName())
+                    .purse(auctionTeam.getTotalPurse())
+                    .remainingPurse(auctionTeam.getRemainingPurse())
                     .captionUserId(auctionTeam.getCaptionUserId())
                     .build()).toList();
         }

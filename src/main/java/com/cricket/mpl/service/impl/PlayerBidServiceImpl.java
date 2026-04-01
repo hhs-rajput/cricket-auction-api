@@ -4,7 +4,9 @@ import com.cricket.mpl.dto.request.PlayerBidRequest;
 import com.cricket.mpl.dto.response.LiveAuctionCurrentPlayerResponseDTO;
 import com.cricket.mpl.entity.Player;
 import com.cricket.mpl.entity.PlayerBid;
+import com.cricket.mpl.entity.PlayerBidTransaction;
 import com.cricket.mpl.repository.PlayerBidRepository;
+import com.cricket.mpl.repository.PlayerBidTransactionRepository;
 import com.cricket.mpl.repository.PlayerRepository;
 import com.cricket.mpl.service.PlayerBidService;
 import com.cricket.mpl.service.PlayerService;
@@ -16,10 +18,12 @@ import java.util.Optional;
 public class PlayerBidServiceImpl implements PlayerBidService {
 
     private final PlayerBidRepository playerBidRepository;
+    private final PlayerBidTransactionRepository playerBidTransactionRepository;
     private final PlayerRepository playerRepository;
 
-    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerRepository playerRepository) {
+    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository) {
         this.playerBidRepository = playerBidRepository;
+        this.playerBidTransactionRepository = playerBidTransactionRepository;
         this.playerRepository = playerRepository;
     }
 
@@ -59,7 +63,21 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
         playerBid.setLeadingTeamId(playerBidRequest.getTeamId());
         playerBidRepository.save(playerBid);
+        PlayerBidTransaction playerBidTransaction = getPlayerBidTransaction(playerBidRequest);
+        playerBidTransactionRepository.save(playerBidTransaction);
 
 
+    }
+
+    private static PlayerBidTransaction getPlayerBidTransaction(PlayerBidRequest playerBidRequest) {
+        PlayerBidTransaction playerBidTransaction=new PlayerBidTransaction();
+        playerBidTransaction.setBidAmount(playerBidRequest.getBidAmount());
+        playerBidTransaction.setAuctionId(playerBidRequest.getAuctionId());
+        playerBidTransaction.setPlayerBidId(playerBidRequest.getPlayerBidId());
+        playerBidTransaction.setPlayerBasePrice(playerBidRequest.getBasePrice());
+        playerBidTransaction.setPlayerId(playerBidRequest.getPlayerId());
+        playerBidTransaction.setTeamId(playerBidRequest.getTeamId());
+        playerBidTransaction.setCreatedBy(playerBidRequest.getUserId());
+        return playerBidTransaction;
     }
 }

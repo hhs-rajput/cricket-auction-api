@@ -16,6 +16,7 @@ CREATE TABLE mpl.players (
         REFERENCES mpl.users(user_id)
         ON DELETE SET NULL
 );
+
 CREATE TABLE mpl.users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT null UNIQUE,
@@ -52,8 +53,15 @@ CREATE TABLE mpl.auction_team_mapping (
     auction_team_mapping_id SERIAL PRIMARY KEY,
     auction_id INTEGER NOT NULL,
     team_id INTEGER  NOT NULL,
-    caption_user_id INTEGER NOT null
+    team_name VARCHAR(255) NOT NULL,
+    caption_user_id INTEGER NOT null,
+    total_purse INTEGER,
+	remaining_purse INTEGER,
+	CONSTRAINT uq_auction_team UNIQUE (auction_id, team_id)
 );
+
+
+
 
 CREATE TABLE mpl.player_bid_transactions  (
     player_bid_id SERIAL PRIMARY KEY,
@@ -78,6 +86,7 @@ CREATE TABLE mpl.player_bid (
     CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
     CONSTRAINT unique_auction_player_status UNIQUE (auction_id, status)
 );
+
 CREATE TABLE mpl.player_bid_transactions (
 	transaction_id SERIAL PRIMARY key,
     player_bid_id INTEGER NOT NULL,

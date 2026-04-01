@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class AuctionRegisterRequest {
     private Integer auctionId;
     private Integer teamId;
+    private String teamName;
     private Integer captionUserId;
 }
