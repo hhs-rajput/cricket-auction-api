@@ -1,5 +1,6 @@
 package com.cricket.mpl.service;
 
+import com.cricket.mpl.dto.request.AuctionRegisterRequest;
 import com.cricket.mpl.dto.request.AuctionRequest;
 import com.cricket.mpl.dto.response.AuctionResponseDTO;
 
@@ -19,4 +20,6 @@ public interface AuctionService {
    AuctionResponseDTO complete(Integer auctionId);
 
    List<AuctionResponseDTO> getUpcomingAuctions();
+
+   String register(AuctionRegisterRequest auctionRegisterRequest);
 }

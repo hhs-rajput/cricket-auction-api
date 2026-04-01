@@ -1,5 +1,6 @@
 package com.cricket.mpl.service.impl;
 
+import com.cricket.mpl.dto.request.AuctionRegisterRequest;
 import com.cricket.mpl.dto.request.AuctionRequest;
 import com.cricket.mpl.dto.response.AuctionResponseDTO;
 import com.cricket.mpl.entity.Auction;
@@ -105,5 +106,15 @@ public class AuctionServiceImpl implements AuctionService {
                     .isActive(auction.getIsActive()).build()).toList();
         }
         return List.of();
+    }
+
+    @Override
+    public String register(AuctionRegisterRequest auctionRegisterRequest) {
+        AuctionTeam auctionTeam=new AuctionTeam();
+        auctionTeam.setAuctionId(auctionRegisterRequest.getAuctionId());
+        auctionTeam.setTeamId(auctionRegisterRequest.getTeamId());
+        auctionTeam.setCaptionUserId(auctionRegisterRequest.getCaptionUserId());
+        auctionTeamRepository.save(auctionTeam);
+        return "Registered Successfully";
     }
 }

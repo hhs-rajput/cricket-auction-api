@@ -1,5 +1,6 @@
 package com.cricket.mpl.controller;
 
+import com.cricket.mpl.dto.request.AuctionRegisterRequest;
 import com.cricket.mpl.dto.request.AuctionRequest;
 import com.cricket.mpl.dto.response.ApiResponse;
 import com.cricket.mpl.dto.response.AuctionResponseDTO;
@@ -68,6 +69,11 @@ public class AuctionController {
     @PostMapping
     public String create(@RequestBody AuctionRequest auctionRequest){
         return auctionService.createAuction(auctionRequest);
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestBody AuctionRegisterRequest auctionRegisterRequest){
+        return auctionService.register(auctionRegisterRequest);
     }
 
     @GetMapping("/teams")

@@ -34,6 +34,7 @@ public class LoginController {
                 .userRole(user.getRole())
                 .name(user.getName())
                 .team(team!=null?team.getTeamName():null)
+                .teamId(team!=null?team.getId():null)
                 .teamStatus(team!=null?team.getTeamStatus():null)
                 .userId(user.getUserId())
                 .build();
