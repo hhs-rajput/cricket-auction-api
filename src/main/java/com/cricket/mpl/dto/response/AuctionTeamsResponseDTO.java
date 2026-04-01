@@ -13,4 +13,5 @@ public class AuctionTeamsResponseDTO {
     private String teamName;
     private Integer teamSize;
     private Integer purse;
+    private Integer remainingPurse;
 }

@@ -140,6 +140,7 @@ public class AuctionServiceImpl implements AuctionService {
                     .teamId(auctionTeam.getTeamId())
                     .teamName(teamMap.get(auctionTeam.getTeamId()).getTeamName())
                     .purse(teamMap.get(auctionTeam.getTeamId()).getTotalPurse())
+                    .remainingPurse(teamMap.get(auctionTeam.getTeamId()).getRemainingPurse())
                     .captionUserId(auctionTeam.getCaptionUserId())
                     .build()).toList();
         }

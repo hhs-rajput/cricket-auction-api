@@ -12,4 +12,6 @@ public interface PlayerService {
     void addPlayer(PlayerRequest player,Integer userId);
 
     List<PlayerResponseDto> getAllPlayersByTeam(Integer teamId);
+
+    List<PlayerResponseDto> getAllPlayers(String category);
 }

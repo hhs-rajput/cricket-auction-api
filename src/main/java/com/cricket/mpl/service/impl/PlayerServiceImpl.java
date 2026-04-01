@@ -58,4 +58,15 @@ public class PlayerServiceImpl implements PlayerService {
         return playerMapper.playerEntityToPlayerResponseDTOList(playerRepository.findByTeamId(teamId));
 
     }
+
+    @Override
+    public List<PlayerResponseDto> getAllPlayers(String category) {
+        List<Player> allPlayers = playerRepository.findByPlayerCategory(category);
+        List<Team> allTeams = teamRepository.findAll();
+        Map<Integer, String> teamIdNameMap = null;
+        if (!allTeams.isEmpty()) {
+            teamIdNameMap = allTeams.stream().collect(Collectors.toMap(Team::getId, Team::getTeamName));
+        }
+        return playerMapper.playerEntityToPlayerResponseDTOList(allPlayers,teamIdNameMap);
+    }
 }

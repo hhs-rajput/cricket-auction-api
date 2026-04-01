@@ -34,19 +34,17 @@ public class PlayerController {
     }
 
     @GetMapping("/by-category")
-    public Map<String, List<PlayerCategoryResponseDto>> getAllPlayersByCategories() {
+    public List<PlayerCategoryResponseDto> getAllPlayersByCategories(@RequestParam String category) {
         System.out.println("Fetching all players by category");
-        List<PlayerResponseDto> allPlayers = playerService.getAllPlayers();
-        return allPlayers.stream()
-                .map(player -> {
-                    PlayerCategoryResponseDto dto = new PlayerCategoryResponseDto();
-                    dto.setPlayerId(player.getPlayerId());
-                    dto.setPlayerName(player.getPlayerName());
-                    dto.setPlayerCategory(player.getPlayerCategory());
-                    dto.setBasePrice(player.getBasePrice());
-                    return dto;
-                })
-                .collect(Collectors.groupingBy(PlayerCategoryResponseDto::getPlayerCategory));
+        List<PlayerResponseDto> allPlayers = playerService.getAllPlayers(category);
+        return allPlayers.stream().map(player -> {
+            PlayerCategoryResponseDto dto = new PlayerCategoryResponseDto();
+            dto.setPlayerId(player.getPlayerId());
+            dto.setPlayerName(player.getPlayerName());
+            dto.setPlayerCategory(player.getPlayerCategory());
+            dto.setBasePrice(player.getBasePrice());
+            return dto;
+        }).collect(Collectors.toList());
     }
     @GetMapping("/team/{teamId}")
     public List<PlayerResponseDto> getAllPlayersByTeam(@PathVariable Integer teamId) {
