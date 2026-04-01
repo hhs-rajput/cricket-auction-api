@@ -1,31 +1,45 @@
 package com.cricket.mpl.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "player_bid", schema = "mpl")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PlayerBid {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bid_id")
-    private Integer bidId;
-
-    @Column(name = "player_id", nullable = false)
-    private Integer playerId;
-
-    @Column(name = "team_id", nullable = false)
-    private Integer teamId;
+    @Column(name = "player_bid_id")
+    private Integer playerBidId;
 
     @Column(name = "auction_id", nullable = false)
     private Integer auctionId;
 
-    @Column(name = "caption_user_id", nullable = false)
-    private Integer captionUserId;
+    @Column(name = "leading_team_id")
+    private Integer leadingTeamId;
 
-    @Column(name = "bid_amount", nullable = false)
+    @Column(name = "player_id", nullable = false)
+    private Integer playerId;
+
+    @Column(name = "bid_amount")
     private Integer bidAmount;
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @Column(name = "created_by")
+    private Integer createdBy;
+
+    @Column(name = "last_updated_by")
+    private Integer lastUpdatedBy;
+
+    @Column(name = "player_base_price")
+    private Integer playerBasePrice;
+
 
 }

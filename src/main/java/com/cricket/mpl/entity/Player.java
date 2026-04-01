@@ -17,6 +17,9 @@ public class Player {
     @Column(name = "player_name")
     private String playerName;
 
+    @Column(name = "player_role")
+    private String player_Role;
+
     @Column(name = "base_price")
     private Integer basePrice;
 

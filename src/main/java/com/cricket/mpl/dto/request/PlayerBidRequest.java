@@ -12,5 +12,7 @@ public class PlayerBidRequest {
     private Integer teamId;
     private Integer playerId;
     private Integer bidAmount;
-    private Integer captionUserId;
+    private Integer basePrice;
+    private Integer userId;
+
 }

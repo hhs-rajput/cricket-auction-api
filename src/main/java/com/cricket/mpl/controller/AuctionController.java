@@ -7,6 +7,7 @@ import com.cricket.mpl.dto.response.AuctionResponseDTO;
 import com.cricket.mpl.dto.response.AuctionTeamsResponseDTO;
 import com.cricket.mpl.dto.response.LiveAuctionCurrentPlayerResponseDTO;
 import com.cricket.mpl.service.AuctionService;
+import com.cricket.mpl.service.PlayerBidService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,12 @@ import java.util.List;
 public class AuctionController {
 
     private final AuctionService auctionService;
+    private final PlayerBidService playerBidService;
 
-    public AuctionController(AuctionService auctionService) {
+    public AuctionController(AuctionService auctionService, PlayerBidService playerBidService) {
         this.auctionService = auctionService;
 
+        this.playerBidService = playerBidService;
     }
 
     @GetMapping
@@ -83,14 +86,8 @@ public class AuctionController {
     }
 
     @GetMapping("/current-player")
-    public LiveAuctionCurrentPlayerResponseDTO getLiveAuctionCurrentPlayerDetails() {
-        System.out.println("Received request to get Auction Teams");
-        return LiveAuctionCurrentPlayerResponseDTO.builder()
-                .playerId(1)
-                .playerName("Manish Pandey")
-                .playerCategory("A")
-                .basePrice(300)
-                .playerRole("Right Handed Batter").build();
+    public LiveAuctionCurrentPlayerResponseDTO getLiveAuctionCurrentPlayerDetails(@RequestParam Integer auctionId) {
+        return playerBidService.getCurrentPlayer(auctionId);
     }
 
 }

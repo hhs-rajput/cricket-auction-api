@@ -1,6 +1,7 @@
 CREATE TABLE mpl.players (
     player_id SERIAL PRIMARY KEY,
     player_name VARCHAR(100),
+    player_role varchar(50),
     base_price INTEGER DEFAULT 0,
     sold BOOLEAN DEFAULT FALSE,
     caption BOOLEAN DEFAULT FALSE,
@@ -8,14 +9,13 @@ CREATE TABLE mpl.players (
     team_id INTEGER,
     phone_number VARCHAR(20),
     player_category VARCHAR(10),
-    user_id INTEGER,   
-    
+    user_id INTEGER,
+
     CONSTRAINT fk_player_user
         FOREIGN KEY (user_id)
         REFERENCES mpl.users(user_id)
         ON DELETE SET NULL
 );
-
 CREATE TABLE mpl.users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT null UNIQUE,
@@ -46,24 +46,35 @@ CREATE TABLE mpl.teams (
 	remaining_purse INTEGER
 );
 
-CREATE TABLE mpl.player_bid (
-    bid_id SERIAL PRIMARY KEY,
-    player_id INTEGER NOT NULL ,
-    team_id INTEGER  not null,
-    auction_id INTEGER  not null,
-    caption_user_id INTEGER NOT null,
-    bid_amount INTEGER
+
+
+CREATE TABLE mpl.auction_team_mapping (
+    auction_team_mapping_id SERIAL PRIMARY KEY,
+    auction_id INTEGER NOT NULL,
+    team_id INTEGER  NOT NULL,
+    caption_user_id INTEGER NOT null
 );
 
+CREATE TABLE mpl.player_bid_transactions  (
+    player_bid_id SERIAL PRIMARY KEY,
+    auction_id INTEGER NOT NULL,
+    INTEGER  ,
+    player_id INTEGER  NOT NULL,
+    created_by INTEGER  NOT NULL,
+    status VARCHAR(10) NOT null,
+    last_updated_by INTEGER  NOT NULL
+);
 
-
-
-
-
-
-
-
-
-
-
-
+CREATE TABLE mpl.player_bid (
+    player_bid_id SERIAL PRIMARY KEY,
+    auction_id INTEGER NOT NULL,
+    leading_team_id INTEGER,
+    player_id INTEGER NOT NULL,
+    player_base_price INTEGER NOT NULL,
+    bid_amount INTEGER,
+    status VARCHAR(20) NOT NULL,
+    created_by INTEGER NOT NULL,
+    last_updated_by INTEGER NOT NULL,
+    CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
+    CONSTRAINT unique_auction_player_status UNIQUE (auction_id, status)
+);
