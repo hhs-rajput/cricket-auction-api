@@ -130,8 +130,8 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<AuctionTeamsResponseDTO> getAuctionTeams() {
-        List<AuctionTeam> auctionTeams = auctionTeamRepository.findAll();
+    public List<AuctionTeamsResponseDTO> getAuctionTeams(Integer auctionId) {
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findByAuctionId(auctionId);
         List<Integer> teamIds = auctionTeams.stream().map(AuctionTeam::getTeamId).toList();
         List<Team> byTeamIds = teamService.findByTeamIds(teamIds);
         Map<Integer,Team> teamMap = byTeamIds.stream().collect(Collectors.toMap(Team::getId, team -> team));

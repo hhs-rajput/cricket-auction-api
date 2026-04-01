@@ -24,5 +24,5 @@ public interface AuctionService {
 
    String register(AuctionRegisterRequest auctionRegisterRequest);
 
-   List<AuctionTeamsResponseDTO> getAuctionTeams();
+   List<AuctionTeamsResponseDTO> getAuctionTeams(Integer auctionId);
 }

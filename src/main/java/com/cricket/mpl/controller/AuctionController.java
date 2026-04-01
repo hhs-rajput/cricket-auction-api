@@ -77,9 +77,9 @@ public class AuctionController {
     }
 
     @GetMapping("/teams")
-    public List<AuctionTeamsResponseDTO> getAuctionTeams() {
+    public List<AuctionTeamsResponseDTO> getAuctionTeams(@RequestParam Integer auctionId) {
         System.out.println("Received request to get Auction Teams.");
-        return auctionService.getAuctionTeams();
+        return auctionService.getAuctionTeams(auctionId);
     }
 
     @GetMapping("/current-player")
