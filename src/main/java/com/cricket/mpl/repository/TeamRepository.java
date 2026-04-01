@@ -11,4 +11,6 @@ public interface TeamRepository extends JpaRepository<Team,Integer> {
     Team findByCaptionUserId(Integer userId);
 
     List<Team> findByTeamStatus(String teamStatus);
+
+    List<Team> findByIdIn(List<Integer> ids);
 }

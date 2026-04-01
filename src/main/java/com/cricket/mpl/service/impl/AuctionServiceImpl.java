@@ -3,24 +3,31 @@ package com.cricket.mpl.service.impl;
 import com.cricket.mpl.dto.request.AuctionRegisterRequest;
 import com.cricket.mpl.dto.request.AuctionRequest;
 import com.cricket.mpl.dto.response.AuctionResponseDTO;
+import com.cricket.mpl.dto.response.AuctionTeamsResponseDTO;
 import com.cricket.mpl.entity.Auction;
 import com.cricket.mpl.entity.AuctionTeam;
+import com.cricket.mpl.entity.Team;
 import com.cricket.mpl.repository.AuctionRepository;
 import com.cricket.mpl.repository.AuctionTeamRepository;
 import com.cricket.mpl.service.AuctionService;
+import com.cricket.mpl.service.TeamService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AuctionServiceImpl implements AuctionService {
 
     private final AuctionRepository auctionRepository;
     private final AuctionTeamRepository auctionTeamRepository;
+    private final TeamService teamService;
 
-    public AuctionServiceImpl(AuctionRepository auctionRepository, AuctionTeamRepository auctionTeamRepository) {
+    public AuctionServiceImpl(AuctionRepository auctionRepository, AuctionTeamRepository auctionTeamRepository, TeamService teamService) {
         this.auctionRepository = auctionRepository;
         this.auctionTeamRepository = auctionTeamRepository;
+        this.teamService = teamService;
     }
 
     @Override
@@ -33,13 +40,17 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public AuctionResponseDTO getActiveAuction() {
-        Auction activeAuction = auctionRepository.findByIsActiveTrue();
-        if (activeAuction!=null) {
-            return AuctionResponseDTO.builder().auctionId(activeAuction.getAuctionId()).isActive(activeAuction.getIsActive()).build();
-        }else{
-            return AuctionResponseDTO.builder().isActive(Boolean.FALSE).build();
+    public List<AuctionResponseDTO> getActiveAuctions() {
+        List<Auction> activeAuctions = auctionRepository.findByIsActiveTrue();
+        if(!activeAuctions.isEmpty()){
+            return activeAuctions.stream().map(auction -> AuctionResponseDTO.builder()
+                    .auctionId(auction.getAuctionId())
+                    .auctionDate(auction.getAuctionDate())
+                    .auctionName(auction.getAuctionName())
+                    .status(auction.getStatus())
+                    .isActive(auction.getIsActive()).build()).toList();
         }
+        return null;
     }
 
     @Override
@@ -49,7 +60,7 @@ public class AuctionServiceImpl implements AuctionService {
         auction.setAuctionDate(auctionRequest.getAuctionDate());
         auction.setAuctionName(auctionRequest.getAuctionName());
         auction.setIsActive(Boolean.FALSE);
-        auction.setStatus("CREATED");
+        auction.setStatus("NOT_STARTED");
         Auction saved = auctionRepository.save(auction);
         return "Auction Create Successfully with id "+saved.getAuctionId();
     }
@@ -116,5 +127,22 @@ public class AuctionServiceImpl implements AuctionService {
         auctionTeam.setCaptionUserId(auctionRegisterRequest.getCaptionUserId());
         auctionTeamRepository.save(auctionTeam);
         return "Registered Successfully";
+    }
+
+    @Override
+    public List<AuctionTeamsResponseDTO> getAuctionTeams() {
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findAll();
+        List<Integer> teamIds = auctionTeams.stream().map(AuctionTeam::getTeamId).toList();
+        List<Team> byTeamIds = teamService.findByTeamIds(teamIds);
+        Map<Integer,Team> teamMap = byTeamIds.stream().collect(Collectors.toMap(Team::getId, team -> team));
+        if(!auctionTeams.isEmpty()){
+            return auctionTeams.stream().map(auctionTeam -> AuctionTeamsResponseDTO.builder()
+                    .teamId(auctionTeam.getTeamId())
+                    .teamName(teamMap.get(auctionTeam.getTeamId()).getTeamName())
+                    .purse(teamMap.get(auctionTeam.getTeamId()).getTotalPurse())
+                    .captionUserId(auctionTeam.getCaptionUserId())
+                    .build()).toList();
+        }
+        return null;
     }
 }

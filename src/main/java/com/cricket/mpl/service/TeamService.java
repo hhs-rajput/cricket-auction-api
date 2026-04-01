@@ -10,6 +10,8 @@ import java.util.List;
 public interface TeamService {
    Team createTeam(TeamRequest request);
 
+   List<Team> findByTeamIds(List<Integer> ids);
+
    Team findByCaptainId(Integer userId);
 
    String approveTeam(Integer teamId, Integer captionUserId);

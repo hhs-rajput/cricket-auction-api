@@ -41,7 +41,14 @@ public class TeamServiceImpl implements TeamService {
                team.setTeamSize(request.getTeamSize());
                team.setCaptionUserId(request.getCaptionUserId());
                team.setTeamStatus("SUBMITTED");
+               team.setTotalPurse(100);
+               team.setRemainingPurse(100);
         return teamRepository.save(team);
+    }
+
+    @Override
+    public List<Team> findByTeamIds(List<Integer> ids) {
+        return teamRepository.findByIdIn(ids);
     }
 
     @Override

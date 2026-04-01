@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction,Integer> {
 
-    Auction findByIsActiveTrue();
+    List<Auction> findByIsActiveTrue();
 
     List<Auction> findByStatusAndAuctionDateAfter(String created, LocalDateTime now);
 }
