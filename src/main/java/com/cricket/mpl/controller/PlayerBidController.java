@@ -22,4 +22,10 @@ public class PlayerBidController {
         return "Bid started successfully";
     }
 
+    @PutMapping
+    public String updateBid(@RequestBody PlayerBidRequest playerBidRequest) {
+        playerBidService.updateBid(playerBidRequest);
+        return "Bid updated successfully";
+    }
+
 }

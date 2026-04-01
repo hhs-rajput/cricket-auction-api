@@ -42,12 +42,24 @@ public class PlayerBidServiceImpl implements PlayerBidService {
             Player player = playerRepository.findById(playerBid.getPlayerId()).get();
             LiveAuctionCurrentPlayerResponseDTO responseDTO=new LiveAuctionCurrentPlayerResponseDTO();
             responseDTO.setPlayerId(playerBid.getPlayerId());
+            responseDTO.setPlayerBidId(playerBid.getPlayerBidId());
             responseDTO.setPlayerName(player.getPlayerName());
-            responseDTO.setBasePrice(playerBid.getPlayerBasePrice());
+            responseDTO.setBasePrice(player.getBasePrice());
             responseDTO.setPlayerRole(player.getPlayer_Role());
             responseDTO.setPlayerCategory(player.getPlayerCategory());
             return responseDTO;
         }
         return null;
+    }
+
+    @Override
+    public void updateBid(PlayerBidRequest playerBidRequest) {
+        PlayerBid playerBid = playerBidRepository.findById(playerBidRequest.getPlayerBidId()).get();
+        playerBid.setBidAmount(playerBidRequest.getBidAmount());
+        playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
+        playerBid.setLeadingTeamId(playerBidRequest.getTeamId());
+        playerBidRepository.save(playerBid);
+
+
     }
 }

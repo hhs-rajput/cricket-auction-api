@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LiveAuctionCurrentPlayerResponseDTO {
+    private Integer playerBidId;
     private Integer playerId;
     private String playerName;
     private String playerRole;

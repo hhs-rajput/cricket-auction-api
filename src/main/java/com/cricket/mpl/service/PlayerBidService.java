@@ -7,4 +7,6 @@ public interface PlayerBidService {
     void startBid(PlayerBidRequest playerBidRequest);
 
     LiveAuctionCurrentPlayerResponseDTO getCurrentPlayer(Integer auctionId);
+
+    void updateBid(PlayerBidRequest playerBidRequest);
 }
