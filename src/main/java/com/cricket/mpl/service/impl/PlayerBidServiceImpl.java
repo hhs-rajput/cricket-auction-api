@@ -47,7 +47,7 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         PlayerBid playerBid = playerBidRepository.findByAuctionIdAndStatus(auctionId, "BID_STARTED");
         AuctionTeam auctionTeam = auctionTeamRepository.findByAuctionIdAndTeamId(auctionId, playerBid.getLeadingTeamId());
         Player player = playerRepository.findById(playerBid.getPlayerId()).get();
-        return getLiveAuctionCurrentPlayerResponseDTO(auctionId, playerBid, player,auctionTeam.getTeamName());
+        return getLiveAuctionCurrentPlayerResponseDTO(auctionId, playerBid, player,auctionTeam!=null?auctionTeam.getTeamName():null);
     }
 
     private static LiveAuctionCurrentPlayerResponseDTO getLiveAuctionCurrentPlayerResponseDTO(Integer auctionId, PlayerBid playerBid, Player player, String leadingTeamName) {
