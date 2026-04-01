@@ -23,10 +23,7 @@ public class Team {
     @Column(name = "team_status")
     private String teamStatus;
 
-    @Column(name = "total_purse")
-    private Integer totalPurse;
-
-    @Column(name = "remaining_purse")
-    private Integer remainingPurse;
+    @Column(name = "auction_joined")
+    private boolean actionJoined;
 
 }

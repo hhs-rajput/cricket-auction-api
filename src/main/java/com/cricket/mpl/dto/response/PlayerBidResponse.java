@@ -5,19 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LiveAuctionCurrentPlayerResponseDTO {
+@Builder
+public class PlayerBidResponse {
     private Integer playerBidId;
     private Integer auctionId;
-    private Integer playerId;
-    private String playerName;
-    private String playerRole;
-    private String playerCategory;
-    private Integer basePrice;
-    private Integer currentBidAmount;
     private Integer leadingTeamId;
     private String leadingTeamName;
+    private Integer playerId;
+    private Integer currentBidAmount;
+
 }

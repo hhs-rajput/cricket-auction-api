@@ -86,8 +86,8 @@ public class AuctionController {
     }
 
     @GetMapping("/current-player")
-    public LiveAuctionCurrentPlayerResponseDTO getLiveAuctionCurrentPlayerDetails(@RequestParam Integer auctionId) {
-        return playerBidService.getCurrentPlayer(auctionId);
+    public LiveAuctionCurrentPlayerResponseDTO getLiveAuctionCurrentPlayerDetails(@RequestParam Integer auctionId,@RequestParam Integer teamId) {
+        return playerBidService.getCurrentPlayer(auctionId,teamId);
     }
 
 }

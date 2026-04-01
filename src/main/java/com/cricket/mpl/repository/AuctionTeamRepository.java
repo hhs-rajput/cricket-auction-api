@@ -12,4 +12,6 @@ public interface AuctionTeamRepository extends JpaRepository<AuctionTeam,Integer
     AuctionTeam findByCaptionUserIdAndTeamId(Integer userId,Integer teamId);
 
     List<AuctionTeam> findByAuctionId(Integer auctionId);
+
+    AuctionTeam findByAuctionIdAndTeamId(Integer auctionId, Integer teamId);
 }

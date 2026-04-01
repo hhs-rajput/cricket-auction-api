@@ -2,11 +2,12 @@ package com.cricket.mpl.service;
 
 import com.cricket.mpl.dto.request.PlayerBidRequest;
 import com.cricket.mpl.dto.response.LiveAuctionCurrentPlayerResponseDTO;
+import com.cricket.mpl.dto.response.PlayerBidResponse;
 
 public interface PlayerBidService {
     void startBid(PlayerBidRequest playerBidRequest);
 
-    LiveAuctionCurrentPlayerResponseDTO getCurrentPlayer(Integer auctionId);
+    LiveAuctionCurrentPlayerResponseDTO getCurrentPlayer(Integer auctionId, Integer teamId);
 
-    void updateBid(PlayerBidRequest playerBidRequest);
+    PlayerBidResponse updateBid(PlayerBidRequest playerBidRequest);
 }

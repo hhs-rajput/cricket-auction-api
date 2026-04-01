@@ -1,6 +1,7 @@
 package com.cricket.mpl.controller;
 
 import com.cricket.mpl.dto.request.PlayerBidRequest;
+import com.cricket.mpl.dto.response.PlayerBidResponse;
 import com.cricket.mpl.service.PlayerBidService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,8 @@ public class PlayerBidController {
     }
 
     @PutMapping
-    public String updateBid(@RequestBody PlayerBidRequest playerBidRequest) {
-        playerBidService.updateBid(playerBidRequest);
-        return "Bid updated successfully";
+    public PlayerBidResponse updateBid(@RequestBody PlayerBidRequest playerBidRequest) {
+       return playerBidService.updateBid(playerBidRequest);
     }
 
 }
