@@ -1,6 +1,7 @@
 package com.cricket.mpl.controller;
 
 import com.cricket.mpl.dto.request.PlayerRequest;
+import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.request.UserRequest;
 import com.cricket.mpl.dto.response.PlayerCategoryResponseDto;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
@@ -66,6 +67,11 @@ public class PlayerController {
         playerService.addPlayer(playerRequest);
 
         return "Player " + playerRequest.getPlayerCategory() + " added successfully!";
+    }
+
+    @PostMapping("/sell")
+    public String sell(@RequestBody SellPlayerRequest sellPlayerRequest) {
+        return playerService.sellPlayer(sellPlayerRequest);
     }
 
 }

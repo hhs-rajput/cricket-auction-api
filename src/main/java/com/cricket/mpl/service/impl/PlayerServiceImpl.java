@@ -1,6 +1,7 @@
 package com.cricket.mpl.service.impl;
 
 import com.cricket.mpl.dto.request.PlayerRequest;
+import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.entity.Player;
 import com.cricket.mpl.entity.Team;
@@ -21,8 +22,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
-    @Autowired
     private final PlayerMapper playerMapper;
+
 
     public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper) {
         this.playerRepository = playerRepository;
@@ -68,5 +69,11 @@ public class PlayerServiceImpl implements PlayerService {
             teamIdNameMap = allTeams.stream().collect(Collectors.toMap(Team::getId, Team::getTeamName));
         }
         return playerMapper.playerEntityToPlayerResponseDTOList(allPlayers,teamIdNameMap);
+    }
+
+    @Override
+    public String sellPlayer(SellPlayerRequest sellPlayerRequest) {
+
+        return "Player is sold. ";
     }
 }
