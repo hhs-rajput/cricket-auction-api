@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlayerBidRepository extends JpaRepository<PlayerBid,Integer> {
     PlayerBid findByAuctionIdAndStatus(Integer auctionId, String bidStarted);
+
+    PlayerBid findByAuctionIdAndLeadingTeamIdAndStatus(Integer auctionId, Integer teamId, String bidStarted);
 }

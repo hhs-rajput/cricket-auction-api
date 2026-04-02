@@ -41,10 +41,7 @@ CREATE TABLE mpl.teams (
     team_size INTEGER CHECK (team_size > 0),
     team_status VARCHAR(10) NOT NULL ,
     auction_joined BOOLEAN DEFAULT FALSE,
-    caption_user_id INTEGER NOT NULL unique,
-    auction_id INTEGER ,
-    total_purse INTEGER,
-	remaining_purse INTEGER
+    caption_user_id INTEGER NOT NULL unique
 );
 
 
@@ -59,6 +56,9 @@ CREATE TABLE mpl.auction_team_mapping (
 	remaining_purse INTEGER,
 	CONSTRAINT uq_auction_team UNIQUE (auction_id, team_id)
 );
+
+
+
 
 
 
@@ -84,7 +84,7 @@ CREATE TABLE mpl.player_bid (
     created_by INTEGER NOT NULL,
     last_updated_by INTEGER NOT NULL,
     CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
-    CONSTRAINT unique_auction_player_status UNIQUE (auction_id, status)
+    CONSTRAINT unique_auction_player_status UNIQUE (auction_id,player_id, status)
 );
 
 CREATE TABLE mpl.player_bid_transactions (

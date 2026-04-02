@@ -6,12 +6,15 @@ import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.dto.response.PlayerSoldDto;
 import com.cricket.mpl.entity.AuctionTeam;
 import com.cricket.mpl.entity.Player;
+import com.cricket.mpl.entity.PlayerBid;
 import com.cricket.mpl.entity.Team;
 import com.cricket.mpl.mapper.PlayerMapper;
 import com.cricket.mpl.repository.AuctionTeamRepository;
+import com.cricket.mpl.repository.PlayerBidRepository;
 import com.cricket.mpl.repository.PlayerRepository;
 import com.cricket.mpl.repository.TeamRepository;
 import com.cricket.mpl.service.PlayerService;
+import jakarta.transaction.Transactional;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +29,16 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
     private final PlayerMapper playerMapper;
+    private final PlayerBidRepository playerBidRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final AuctionTeamRepository auctionTeamRepository;
 
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.playerMapper = playerMapper;
+        this.playerBidRepository = playerBidRepository;
         this.messagingTemplate = messagingTemplate;
         this.auctionTeamRepository = auctionTeamRepository;
     }
@@ -79,6 +84,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    @Transactional
     public PlayerSoldDto sellPlayer(SellPlayerRequest sellPlayerRequest) {
 
         AuctionTeam auctionTeam = auctionTeamRepository.
@@ -86,11 +92,19 @@ public class PlayerServiceImpl implements PlayerService {
                         (sellPlayerRequest.getAuctionId(), sellPlayerRequest.getTeamId());
         auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()-sellPlayerRequest.getSoldPrice());
         auctionTeamRepository.save(auctionTeam);
+        PlayerBid playerBid = playerBidRepository.findByAuctionIdAndLeadingTeamIdAndStatus(sellPlayerRequest.getAuctionId(), sellPlayerRequest.getTeamId(), "BID_STARTED");
+        playerBid.setStatus("BID_CLOSED");
+        playerBidRepository.save(playerBid);
+        Player player = playerRepository.findById(sellPlayerRequest.getPlayerId()).get();
+        player.setSold(Boolean.TRUE);
+        player.setTeamId(sellPlayerRequest.getTeamId());
+        player.setSoldPrice(sellPlayerRequest.getSoldPrice());
+        playerRepository.save(player);
         PlayerSoldDto playerSoldDto = PlayerSoldDto.builder()
-                .playerId(23)
-                .playerName("Jos Buttler")
-                .leadingTeamName("Mumbai Indians")
-                .leadingTeamId(3).build();
+                .playerId(playerBid.getPlayerId())
+                .playerName(player.getPlayerName())
+                .leadingTeamName(auctionTeam.getTeamName())
+                .leadingTeamId(auctionTeam.getTeamId()).build();
         messagingTemplate.convertAndSend("/topic/sell-player/"+sellPlayerRequest.getAuctionId() ,
                 playerSoldDto);
         return playerSoldDto;
