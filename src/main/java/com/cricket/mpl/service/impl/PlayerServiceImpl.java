@@ -3,13 +3,16 @@ package com.cricket.mpl.service.impl;
 import com.cricket.mpl.dto.request.PlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
+import com.cricket.mpl.dto.response.PlayerSoldDto;
+import com.cricket.mpl.entity.AuctionTeam;
 import com.cricket.mpl.entity.Player;
 import com.cricket.mpl.entity.Team;
 import com.cricket.mpl.mapper.PlayerMapper;
+import com.cricket.mpl.repository.AuctionTeamRepository;
 import com.cricket.mpl.repository.PlayerRepository;
 import com.cricket.mpl.repository.TeamRepository;
 import com.cricket.mpl.service.PlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +26,16 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
     private final PlayerMapper playerMapper;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final AuctionTeamRepository auctionTeamRepository;
 
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.playerMapper = playerMapper;
+        this.messagingTemplate = messagingTemplate;
+        this.auctionTeamRepository = auctionTeamRepository;
     }
 
     @Override
@@ -72,8 +79,20 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public String sellPlayer(SellPlayerRequest sellPlayerRequest) {
+    public PlayerSoldDto sellPlayer(SellPlayerRequest sellPlayerRequest) {
 
-        return "Player is sold. ";
+        AuctionTeam auctionTeam = auctionTeamRepository.
+                findByAuctionIdAndTeamId
+                        (sellPlayerRequest.getAuctionId(), sellPlayerRequest.getTeamId());
+        auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()-sellPlayerRequest.getSoldPrice());
+        auctionTeamRepository.save(auctionTeam);
+        PlayerSoldDto playerSoldDto = PlayerSoldDto.builder()
+                .playerId(23)
+                .playerName("Jos Buttler")
+                .leadingTeamName("Mumbai Indians")
+                .leadingTeamId(3).build();
+        messagingTemplate.convertAndSend("/topic/sell-player/"+sellPlayerRequest.getAuctionId() ,
+                playerSoldDto);
+        return playerSoldDto;
     }
 }

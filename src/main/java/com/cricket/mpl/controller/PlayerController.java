@@ -5,6 +5,7 @@ import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.request.UserRequest;
 import com.cricket.mpl.dto.response.PlayerCategoryResponseDto;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
+import com.cricket.mpl.dto.response.PlayerSoldDto;
 import com.cricket.mpl.entity.User;
 import com.cricket.mpl.service.PlayerService;
 import com.cricket.mpl.service.UserService;
@@ -70,7 +71,7 @@ public class PlayerController {
     }
 
     @PostMapping("/sell")
-    public String sell(@RequestBody SellPlayerRequest sellPlayerRequest) {
+    public PlayerSoldDto sell(@RequestBody SellPlayerRequest sellPlayerRequest) {
         return playerService.sellPlayer(sellPlayerRequest);
     }
 
