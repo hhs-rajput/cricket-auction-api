@@ -7,6 +7,7 @@ CREATE TABLE mpl.players (
     caption BOOLEAN DEFAULT FALSE,
     sold_price INTEGER DEFAULT 0,
     team_id INTEGER,
+    retention_status varchar(50),
     phone_number VARCHAR(20),
     player_category VARCHAR(10),
     user_id INTEGER,
@@ -14,7 +15,8 @@ CREATE TABLE mpl.players (
     CONSTRAINT fk_player_user
         FOREIGN KEY (user_id)
         REFERENCES mpl.users(user_id)
-        ON DELETE SET NULL
+        ON DELETE SET null,
+
 );
 
 CREATE TABLE mpl.users (

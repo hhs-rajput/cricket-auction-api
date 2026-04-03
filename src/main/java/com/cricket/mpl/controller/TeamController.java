@@ -38,6 +38,7 @@ public class TeamController {
     public List<TeamAndCaptionResponseDTO> teamRequests() {
         return teamService.teamRequests();
     }
+
     @GetMapping()
     public MyTeamDetailsResponse myTeamDetails(@RequestParam Integer captionUserId) {
         return teamService.myTeamDetails(captionUserId);

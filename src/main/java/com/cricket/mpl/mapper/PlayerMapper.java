@@ -38,6 +38,7 @@ public class PlayerMapper {
                 responseDto.setTeam(teamIdNameMap.getOrDefault(player.getTeamId(),""));
             }
             responseDto.setPlayerCategory(player.getPlayerCategory());
+            responseDto.setRetentionStatus(player.getRetentionStatus());
             return responseDto;
         }).toList();
     }
@@ -53,6 +54,7 @@ public class PlayerMapper {
             responseDto.setCaption(player.getCaption());
             responseDto.setPhoneNumber(player.getPhoneNumber());
             responseDto.setPlayerCategory(player.getPlayerCategory());
+            responseDto.setRetentionStatus(player.getRetentionStatus());
             return responseDto;
         }).toList();
     }

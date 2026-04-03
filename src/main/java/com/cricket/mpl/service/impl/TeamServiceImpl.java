@@ -80,7 +80,7 @@ public class TeamServiceImpl implements TeamService {
     public MyTeamDetailsResponse myTeamDetails(Integer captionUserId) {
 
             Team team = teamRepository.findByCaptionUserId(captionUserId);
-        List<Player> teamPlayers = playerRepository.findByTeamId(team.getId());
+        List<Player> teamPlayers = playerRepository.findBySoldAndTeamId(Boolean.TRUE,team.getId());
         String captionName = teamPlayers.stream().filter(Player::getCaption).findFirst().map(Player::getPlayerName).orElse("");
         List<PlayerResponseDto> players = playerMapper.playerEntityToPlayerResponseDTOList(teamPlayers);
         return MyTeamDetailsResponse.builder()

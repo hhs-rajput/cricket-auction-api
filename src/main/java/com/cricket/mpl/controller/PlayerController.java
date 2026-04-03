@@ -1,11 +1,13 @@
 package com.cricket.mpl.controller;
 
 import com.cricket.mpl.dto.request.PlayerRequest;
+import com.cricket.mpl.dto.request.RetainPlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.request.UserRequest;
 import com.cricket.mpl.dto.response.PlayerCategoryResponseDto;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.dto.response.PlayerSoldDto;
+import com.cricket.mpl.dto.response.RetainRequestsResponseDto;
 import com.cricket.mpl.entity.User;
 import com.cricket.mpl.service.PlayerService;
 import com.cricket.mpl.service.UserService;
@@ -73,6 +75,42 @@ public class PlayerController {
     @PostMapping("/sell")
     public PlayerSoldDto sell(@RequestBody SellPlayerRequest sellPlayerRequest) {
         return playerService.sellPlayer(sellPlayerRequest);
+    }
+
+    @PostMapping("/retain")
+    public String retainPlayer(@RequestBody RetainPlayerRequest retainPlayerRequest) {
+        playerService.retainPlayer(retainPlayerRequest);
+        return "Retention Request sent to admin Successfully!";
+    }
+
+    @GetMapping("/retain/requests")
+    public List<RetainRequestsResponseDto> getAllRetainRequests() {
+        System.out.println("Updating  retain request.");
+       // return playerService.getAllRetainRequests();
+        return List.of(RetainRequestsResponseDto.builder()
+
+                .retainRequestStatus("INITIATED")
+                .playerId(25)
+                .playerName("Prashant Rajput")
+                        .teamName("India")
+                        .teamId(1)
+                .build(),RetainRequestsResponseDto.builder()
+
+                .retainRequestStatus("INITIATED")
+                .playerId(26)
+                .playerName("Hemant Kumar")
+                .teamName("India")
+                .teamId(1)
+                .build());
+
+    }
+
+    @PutMapping("/retain/approve")
+    public String approve() {
+        System.out.println("Fetching all retain requests.");
+        // return playerService.getAllRetainRequests();
+        return "";
+
     }
 
 }

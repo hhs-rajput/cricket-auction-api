@@ -1,9 +1,11 @@
 package com.cricket.mpl.service.impl;
 
 import com.cricket.mpl.dto.request.PlayerRequest;
+import com.cricket.mpl.dto.request.RetainPlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.dto.response.PlayerSoldDto;
+import com.cricket.mpl.dto.response.RetainRequestsResponseDto;
 import com.cricket.mpl.entity.AuctionTeam;
 import com.cricket.mpl.entity.Player;
 import com.cricket.mpl.entity.PlayerBid;
@@ -68,13 +70,13 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<PlayerResponseDto> getAllPlayersByTeam(Integer teamId) {
-        return playerMapper.playerEntityToPlayerResponseDTOList(playerRepository.findByTeamId(teamId));
+        return playerMapper.playerEntityToPlayerResponseDTOList(playerRepository.findBySoldAndTeamId(Boolean.TRUE,teamId));
 
     }
 
     @Override
     public List<PlayerResponseDto> getAllPlayers(String category) {
-        List<Player> allPlayers = playerRepository.findByPlayerCategory(category);
+        List<Player> allPlayers = playerRepository.findBySoldAndCaptionAndPlayerCategory(false,false,category);
         List<Team> allTeams = teamRepository.findAll();
         Map<Integer, String> teamIdNameMap = null;
         if (!allTeams.isEmpty()) {
@@ -108,5 +110,19 @@ public class PlayerServiceImpl implements PlayerService {
         messagingTemplate.convertAndSend("/topic/sell-player/"+sellPlayerRequest.getAuctionId() ,
                 playerSoldDto);
         return playerSoldDto;
+    }
+
+    @Override
+    public void retainPlayer(RetainPlayerRequest retainPlayerRequest) {
+        playerRepository.findById(retainPlayerRequest.getPlayerId()).ifPresent(player -> {
+            player.setTeamId(retainPlayerRequest.getTeamId());
+            player.setRetentionStatus("INITIATED");
+            playerRepository.save(player);
+        });
+    }
+
+    @Override
+    public List<RetainRequestsResponseDto> getAllRetainRequests() {
+        return List.of();
     }
 }
