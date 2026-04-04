@@ -34,6 +34,10 @@ public class PlayerBidServiceImpl implements PlayerBidService {
 
     @Override
     public void startBid(PlayerBidRequest playerBidRequest) {
+        PlayerBid existingBid = playerBidRepository.findByAuctionIdAndStatus(playerBidRequest.getAuctionId(), "BID_STARTED");
+        if (existingBid != null) {
+            throw new RuntimeException("A bid is already in progress for this auction.");
+        }
         PlayerBid playerBid=new PlayerBid();
         playerBid.setAuctionId(playerBidRequest.getAuctionId());
         playerBid.setPlayerId(playerBidRequest.getPlayerId());
@@ -99,6 +103,12 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         return playerBidResponse;
 
 
+    }
+
+    @Override
+    public boolean isBiddingOn(Integer auctionId) {
+        PlayerBid existingBid = playerBidRepository.findByAuctionIdAndStatus(auctionId, "BID_STARTED");
+        return existingBid != null;
     }
 
     private static PlayerBidTransaction getPlayerBidTransaction(PlayerBidRequest playerBidRequest) {

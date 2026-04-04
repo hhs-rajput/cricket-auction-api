@@ -10,4 +10,6 @@ public interface PlayerBidService {
     LiveAuctionCurrentPlayerResponseDTO getCurrentPlayer(Integer auctionId, Integer teamId);
 
     PlayerBidResponse updateBid(PlayerBidRequest playerBidRequest);
+
+    boolean isBiddingOn(Integer auctionId);
 }
