@@ -1,3 +1,19 @@
+CREATE TABLE mpl.player_retention (
+    retention_id SERIAL PRIMARY KEY,
+    player_id INTEGER not null,
+    player_name VARCHAR(100),
+    team_id INTEGER not null,
+    team_name VARCHAR(255) NOT NULL ,
+    auction_id INTEGER not null,
+    auction_name VARCHAR(255) not null,
+    status VARCHAR(20),
+    retain_price INTEGER ,
+    created_by INTEGER not null,
+    updated_by INTEGER not null,
+    CONSTRAINT uq_player_retention_auction_team UNIQUE (auction_id, team_id)
+);
+
+
 CREATE TABLE mpl.players (
     player_id SERIAL PRIMARY KEY,
     player_name VARCHAR(100),
@@ -18,6 +34,7 @@ CREATE TABLE mpl.players (
         ON DELETE SET null,
 
 );
+
 
 CREATE TABLE mpl.users (
     user_id SERIAL PRIMARY KEY,

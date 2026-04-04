@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "players")
+@Table(name = "players", schema = "mpl")
 @Data
 public class Player {
 
@@ -36,9 +36,6 @@ public class Player {
 
     @Column(name = "player_category")
     private String playerCategory;
-
-    @Column(name = "retention_status")
-    private String retentionStatus;
 
     @Column(name = "user_id")
     private Integer userId;

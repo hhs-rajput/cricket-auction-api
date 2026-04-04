@@ -1,21 +1,16 @@
 package com.cricket.mpl.controller;
 
-import com.cricket.mpl.dto.request.PlayerRequest;
-import com.cricket.mpl.dto.request.RetainPlayerRequest;
-import com.cricket.mpl.dto.request.SellPlayerRequest;
-import com.cricket.mpl.dto.request.UserRequest;
-import com.cricket.mpl.dto.response.PlayerCategoryResponseDto;
-import com.cricket.mpl.dto.response.PlayerResponseDto;
-import com.cricket.mpl.dto.response.PlayerSoldDto;
-import com.cricket.mpl.dto.response.RetainRequestsResponseDto;
+import com.cricket.mpl.dto.request.*;
+import com.cricket.mpl.dto.response.*;
 import com.cricket.mpl.entity.User;
 import com.cricket.mpl.service.PlayerService;
 import com.cricket.mpl.service.UserService;
 import com.cricket.mpl.util.Constants;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -78,39 +73,43 @@ public class PlayerController {
     }
 
     @PostMapping("/retain")
-    public String retainPlayer(@RequestBody RetainPlayerRequest retainPlayerRequest) {
+    public ResponseEntity<ApiResponse<String>> retainPlayer(@RequestBody RetainPlayerRequest retainPlayerRequest) {
         playerService.retainPlayer(retainPlayerRequest);
-        return "Retention Request sent to admin Successfully!";
+        return ResponseEntity.ok(new ApiResponse<>(true, "Retention Request sent to admin Successfully!", null));
     }
 
     @GetMapping("/retain/requests")
     public List<RetainRequestsResponseDto> getAllRetainRequests() {
         System.out.println("Updating  retain request.");
-       // return playerService.getAllRetainRequests();
-        return List.of(RetainRequestsResponseDto.builder()
-
-                .retainRequestStatus("INITIATED")
-                .playerId(25)
-                .playerName("Prashant Rajput")
-                        .teamName("India")
-                        .teamId(1)
-                .build(),RetainRequestsResponseDto.builder()
-
-                .retainRequestStatus("INITIATED")
-                .playerId(26)
-                .playerName("Hemant Kumar")
-                .teamName("India")
-                .teamId(1)
-                .build());
-
+        return playerService.getAllRetainRequests();
     }
 
     @PutMapping("/retain/approve")
-    public String approve() {
+    public String retainApprove(@RequestBody RetainApproveRequest retainApproveRequest) {
         System.out.println("Fetching all retain requests.");
-        // return playerService.getAllRetainRequests();
+        playerService.retainApprove(retainApproveRequest);
         return "";
 
+    }
+
+    @PutMapping("/retain/reject")
+    public String retainReject(@RequestBody RetainApproveRequest retainApproveRequest) {
+        System.out.println("Fetching all retain requests.");
+        playerService.retainReject(retainApproveRequest);
+        return "";
+
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiResponse<String>> handleRuntimeException(RuntimeException ex) {
+        if (ex.getMessage().contains("You cannot retain more than one player for the same auction")) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new ApiResponse<>(false, ex.getMessage(), null));
+        }
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse<>(false, "An error occurred: " + ex.getMessage(), null));
     }
 
 }

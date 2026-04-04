@@ -1,6 +1,7 @@
 package com.cricket.mpl.service;
 
 import com.cricket.mpl.dto.request.PlayerRequest;
+import com.cricket.mpl.dto.request.RetainApproveRequest;
 import com.cricket.mpl.dto.request.RetainPlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
@@ -24,4 +25,8 @@ public interface PlayerService {
     void retainPlayer(RetainPlayerRequest retainPlayerRequest);
 
     List<RetainRequestsResponseDto> getAllRetainRequests();
+
+    void retainApprove(RetainApproveRequest retainApproveRequest);
+
+    void retainReject(RetainApproveRequest retainApproveRequest);
 }

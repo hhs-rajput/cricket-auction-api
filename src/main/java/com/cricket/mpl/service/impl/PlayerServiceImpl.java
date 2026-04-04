@@ -1,20 +1,15 @@
 package com.cricket.mpl.service.impl;
 
 import com.cricket.mpl.dto.request.PlayerRequest;
+import com.cricket.mpl.dto.request.RetainApproveRequest;
 import com.cricket.mpl.dto.request.RetainPlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.dto.response.PlayerSoldDto;
 import com.cricket.mpl.dto.response.RetainRequestsResponseDto;
-import com.cricket.mpl.entity.AuctionTeam;
-import com.cricket.mpl.entity.Player;
-import com.cricket.mpl.entity.PlayerBid;
-import com.cricket.mpl.entity.Team;
+import com.cricket.mpl.entity.*;
 import com.cricket.mpl.mapper.PlayerMapper;
-import com.cricket.mpl.repository.AuctionTeamRepository;
-import com.cricket.mpl.repository.PlayerBidRepository;
-import com.cricket.mpl.repository.PlayerRepository;
-import com.cricket.mpl.repository.TeamRepository;
+import com.cricket.mpl.repository.*;
 import com.cricket.mpl.service.PlayerService;
 import jakarta.transaction.Transactional;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,15 +30,17 @@ public class PlayerServiceImpl implements PlayerService {
     private final PlayerBidRepository playerBidRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final AuctionTeamRepository auctionTeamRepository;
+    private final PlayerRetentionRepository playerRetentionRepository;
 
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.playerMapper = playerMapper;
         this.playerBidRepository = playerBidRepository;
         this.messagingTemplate = messagingTemplate;
         this.auctionTeamRepository = auctionTeamRepository;
+        this.playerRetentionRepository = playerRetentionRepository;
     }
 
     @Override
@@ -113,16 +111,62 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    @Transactional
     public void retainPlayer(RetainPlayerRequest retainPlayerRequest) {
-        playerRepository.findById(retainPlayerRequest.getPlayerId()).ifPresent(player -> {
-            player.setTeamId(retainPlayerRequest.getTeamId());
-            player.setRetentionStatus("INITIATED");
+        PlayerRetention byAuctionIdAndTeamId = playerRetentionRepository.findByAuctionIdAndTeamId(retainPlayerRequest.getAuctionId(), retainPlayerRequest.getTeamId());
+        if(byAuctionIdAndTeamId!=null){
+            throw new RuntimeException("You cannot retain more than one player for the same auction.");
+        }
+        PlayerRetention playerRetention = new PlayerRetention();
+        playerRetention.setPlayerName(retainPlayerRequest.getPlayerName());
+        playerRetention.setTeamId(retainPlayerRequest.getTeamId());
+        playerRetention.setAuctionName(retainPlayerRequest.getAuctionName());
+        playerRetention.setTeamName(retainPlayerRequest.getTeamName());
+        playerRetention.setPlayerId(retainPlayerRequest.getPlayerId());
+        playerRetention.setAuctionId(retainPlayerRequest.getAuctionId());
+        playerRetention.setCreatedBy(retainPlayerRequest.getUserId());
+        playerRetention.setUpdatedBy(retainPlayerRequest.getUserId());
+        playerRetention.setStatus("REVIEW");
+        playerRetentionRepository.save(playerRetention);
+    }
+
+    @Override
+    public List<RetainRequestsResponseDto> getAllRetainRequests() {
+        List<PlayerRetention> allPlayerRetentionRequests = playerRetentionRepository.findByStatus("REVIEW");
+        return allPlayerRetentionRequests.stream().map(playerRetention -> RetainRequestsResponseDto.builder()
+                        .retainRequestId(playerRetention.getRetentionId())
+                        .playerName(playerRetention.getPlayerName())
+                        .teamName(playerRetention.getTeamName())
+                        .auctionName(playerRetention.getAuctionName())
+                        .build()).toList();
+    }
+
+    @Override
+    @Transactional
+    public void retainApprove(RetainApproveRequest retainApproveRequest) {
+        PlayerRetention retainedPlayer = playerRetentionRepository.findById(retainApproveRequest.getRetainRequestId()).get();
+        retainedPlayer.setStatus("APPROVED");
+        retainedPlayer.setRetainPrice(retainApproveRequest.getRetainPrice());
+        retainedPlayer.setUpdatedBy(retainApproveRequest.getUserId());
+        playerRetentionRepository.save(retainedPlayer);
+        AuctionTeam auctionTeam = auctionTeamRepository.findByAuctionIdAndTeamId(retainedPlayer.getAuctionId(), retainedPlayer.getTeamId());
+        auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()-retainApproveRequest.getRetainPrice());
+        auctionTeamRepository.save(auctionTeam);
+        playerRepository.findById(retainedPlayer.getPlayerId()).ifPresent(player -> {
+            player.setTeamId(retainedPlayer.getTeamId());
+            player.setSold(Boolean.TRUE);
+            player.setSoldPrice(retainApproveRequest.getRetainPrice());
             playerRepository.save(player);
         });
     }
 
     @Override
-    public List<RetainRequestsResponseDto> getAllRetainRequests() {
-        return List.of();
+    public void retainReject(RetainApproveRequest retainApproveRequest) {
+        playerRetentionRepository.findById(retainApproveRequest.getRetainRequestId()).ifPresent(playerRetention -> {
+            playerRetention.setStatus("REJECTED");
+            playerRetention.setUpdatedBy(retainApproveRequest.getUserId());
+            playerRetention.setTeamId(null);
+            playerRetentionRepository.save(playerRetention);
+        });
     }
 }

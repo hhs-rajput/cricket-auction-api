@@ -121,6 +121,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public String register(AuctionRegisterRequest auctionRegisterRequest) {
+        AuctionTeam existingAuctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamId(auctionRegisterRequest.getCaptionUserId(), auctionRegisterRequest.getTeamId());
+        if(existingAuctionTeam!=null){
+            return "You have already registered for a different auction.";
+        }
         AuctionTeam auctionTeam=new AuctionTeam();
         auctionTeam.setAuctionId(auctionRegisterRequest.getAuctionId());
         auctionTeam.setTeamId(auctionRegisterRequest.getTeamId());

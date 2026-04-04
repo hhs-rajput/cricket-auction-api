@@ -16,7 +16,6 @@ public class PlayerResponseDto {
     private String team;
     private String phoneNumber;
     private String playerCategory;
-    private String retentionStatus;
     private Boolean caption;
 
 }

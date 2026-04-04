@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player,Integer> {
@@ -13,7 +14,8 @@ public interface PlayerRepository extends JpaRepository<Player,Integer> {
 
     List<Player> findBySoldAndTeamId(Boolean sold,Integer id);
 
-    List<Player> findByPlayerCategory(String category);
+    //List<Player> findByPlayerCategory(String category);
 
-    List<Player> findBySoldAndCaptionAndPlayerCategory(boolean b, boolean b1, String category);
+    List<Player> findBySoldAndCaptionAndPlayerCategory(boolean sold, boolean caption, String category);
+
 }

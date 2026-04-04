@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RetainRequestsResponseDto {
     private Integer retainRequestId;
-    private String retainRequestStatus;
-    private Integer teamId;
     private String teamName;
-    private Integer playerId;
     private String playerName;
+    private String auctionName;
 
 }
