@@ -4,6 +4,7 @@ import com.cricket.mpl.dto.request.PlayerRequest;
 import com.cricket.mpl.dto.request.RetainApproveRequest;
 import com.cricket.mpl.dto.request.RetainPlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
+import com.cricket.mpl.dto.request.PlayerUpdateRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.dto.response.PlayerSoldDto;
 import com.cricket.mpl.dto.response.RetainRequestsResponseDto;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +31,10 @@ public class PlayerServiceImpl implements PlayerService {
     private final SimpMessagingTemplate messagingTemplate;
     private final AuctionTeamRepository auctionTeamRepository;
     private final PlayerRetentionRepository playerRetentionRepository;
+    private final UserRepository userRepository;
 
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository, UserRepository userRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.playerMapper = playerMapper;
@@ -41,6 +42,7 @@ public class PlayerServiceImpl implements PlayerService {
         this.messagingTemplate = messagingTemplate;
         this.auctionTeamRepository = auctionTeamRepository;
         this.playerRetentionRepository = playerRetentionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -64,6 +66,23 @@ public class PlayerServiceImpl implements PlayerService {
         Player entity = playerMapper.playerRequestDTOToPlayer(player);
         entity.setUserId(userId);
         playerRepository.save(entity);
+    }
+
+    @Override
+    @Transactional
+    public void updatePlayer(PlayerUpdateRequest playerUpdateRequest) {
+        Player player = playerRepository.findById(playerUpdateRequest.getPlayerId())
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+        player.setPlayerName(playerUpdateRequest.getPlayerName());
+        player.setPlayerCategory(playerUpdateRequest.getPlayerCategory());
+        player.setBasePrice(playerUpdateRequest.getBasePrice());
+        player.setCaption(playerUpdateRequest.getCaption());
+        playerRepository.save(player);
+        if(playerUpdateRequest.getCaption()){
+            User user = userRepository.findById(player.getUserId()).get();
+            user.setRole("CAPTION");
+            userRepository.save(user);
+        }
     }
 
     @Override
@@ -113,8 +132,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @Transactional
     public void retainPlayer(RetainPlayerRequest retainPlayerRequest) {
-        PlayerRetention byAuctionIdAndTeamId = playerRetentionRepository.findByAuctionIdAndTeamId(retainPlayerRequest.getAuctionId(), retainPlayerRequest.getTeamId());
-        if(byAuctionIdAndTeamId!=null){
+        PlayerRetention byAuctionIdAndTeamId = playerRetentionRepository.findByAuctionIdAndTeamIdAndStatus(retainPlayerRequest.getAuctionId(), retainPlayerRequest.getTeamId(),"REVIEW");
+        if(byAuctionIdAndTeamId!=null && !byAuctionIdAndTeamId.getStatus().equalsIgnoreCase("rejected")){
             throw new RuntimeException("You cannot retain more than one player for the same auction.");
         }
         PlayerRetention playerRetention = new PlayerRetention();
@@ -162,11 +181,14 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void retainReject(RetainApproveRequest retainApproveRequest) {
-        playerRetentionRepository.findById(retainApproveRequest.getRetainRequestId()).ifPresent(playerRetention -> {
-            playerRetention.setStatus("REJECTED");
-            playerRetention.setUpdatedBy(retainApproveRequest.getUserId());
-            playerRetention.setTeamId(null);
-            playerRetentionRepository.save(playerRetention);
-        });
+        try {
+            playerRetentionRepository.findById(retainApproveRequest.getRetainRequestId()).ifPresent(playerRetention -> {
+                playerRetention.setStatus("REJECTED");
+                playerRetention.setUpdatedBy(retainApproveRequest.getUserId());
+                playerRetentionRepository.save(playerRetention);
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

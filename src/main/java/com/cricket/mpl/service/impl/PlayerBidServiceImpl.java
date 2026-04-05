@@ -68,7 +68,7 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         responseDTO.setPlayerBidId(playerBid.getPlayerBidId());
         responseDTO.setPlayerName(player.getPlayerName());
         responseDTO.setBasePrice(player.getBasePrice());
-        responseDTO.setPlayerRole(player.getPlayer_Role());
+        responseDTO.setPlayerRole(player.getPlayerRole());
         responseDTO.setLeadingTeamName(leadingTeamName);
         responseDTO.setLeadingTeamId(playerBid.getLeadingTeamId());
         responseDTO.setPlayerCategory(player.getPlayerCategory());

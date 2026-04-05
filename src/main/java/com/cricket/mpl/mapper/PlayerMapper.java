@@ -21,6 +21,7 @@ public class PlayerMapper {
         player.setTeamId(playerRequest.getTeam());
         player.setCaption(Boolean.FALSE);
         player.setPlayerCategory(playerRequest.getPlayerCategory());
+        player.setPlayerRole(playerRequest.getPlayerRole());
         player.setUserId(playerRequest.getUserId());
         return player;
     }

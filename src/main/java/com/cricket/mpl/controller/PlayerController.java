@@ -72,6 +72,12 @@ public class PlayerController {
         return playerService.sellPlayer(sellPlayerRequest);
     }
 
+    @PutMapping
+    public ResponseEntity<ApiResponse<String>> updatePlayer(@RequestBody PlayerUpdateRequest playerUpdateRequest) {
+        playerService.updatePlayer(playerUpdateRequest);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Player updated successfully!", null));
+    }
+
     @PostMapping("/retain")
     public ResponseEntity<ApiResponse<String>> retainPlayer(@RequestBody RetainPlayerRequest retainPlayerRequest) {
         playerService.retainPlayer(retainPlayerRequest);

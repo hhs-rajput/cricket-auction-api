@@ -64,7 +64,13 @@ public class TeamServiceImpl implements TeamService {
         player.setCaption(Boolean.TRUE);
         player.setPlayerCategory("A");
         player.setSold(Boolean.TRUE);
+        player.setSoldPrice(player.getSoldPrice());
         playerRepository.save(player);
+
+        User user = userRepository.findById(player.getUserId()).get();
+        user.setRole("CAPTION");
+        userRepository.save(user);
+
         return "Team approved successfully!";
 
     }

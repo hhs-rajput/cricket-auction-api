@@ -10,7 +10,6 @@ CREATE TABLE mpl.player_retention (
     retain_price INTEGER ,
     created_by INTEGER not null,
     updated_by INTEGER not null,
-    CONSTRAINT uq_player_retention_auction_team UNIQUE (auction_id, team_id)
 );
 
 
@@ -20,7 +19,7 @@ CREATE TABLE mpl.players (
     player_role varchar(50),
     base_price INTEGER DEFAULT 0,
     sold BOOLEAN DEFAULT FALSE,
-    caption BOOLEAN DEFAULT FALSE,
+    caption BOOLEAN not null DEFAULT FALSE,
     sold_price INTEGER DEFAULT 0,
     team_id INTEGER,
     retention_status varchar(50),
@@ -31,7 +30,7 @@ CREATE TABLE mpl.players (
     CONSTRAINT fk_player_user
         FOREIGN KEY (user_id)
         REFERENCES mpl.users(user_id)
-        ON DELETE SET null,
+        ON DELETE SET null
 
 );
 

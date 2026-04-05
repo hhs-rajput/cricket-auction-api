@@ -18,7 +18,7 @@ public class Player {
     private String playerName;
 
     @Column(name = "player_role")
-    private String player_Role;
+    private String playerRole;
 
     @Column(name = "base_price")
     private Integer basePrice;

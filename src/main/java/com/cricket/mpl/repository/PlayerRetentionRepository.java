@@ -17,5 +17,5 @@ public interface PlayerRetentionRepository extends JpaRepository<PlayerRetention
 
     List<PlayerRetention> findByStatus(String review);
 
-    PlayerRetention findByAuctionIdAndTeamId(Integer auctionId, Integer teamId);
+    PlayerRetention findByAuctionIdAndTeamIdAndStatus(Integer auctionId, Integer teamId, String status);
 }

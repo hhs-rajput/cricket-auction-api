@@ -11,5 +11,6 @@ public class PlayerRequest {
     private Integer team;
     private String phoneNumber;
     private String playerCategory;
+    private String playerRole;
     private Integer userId;
 }

@@ -4,6 +4,7 @@ import com.cricket.mpl.dto.request.PlayerRequest;
 import com.cricket.mpl.dto.request.RetainApproveRequest;
 import com.cricket.mpl.dto.request.RetainPlayerRequest;
 import com.cricket.mpl.dto.request.SellPlayerRequest;
+import com.cricket.mpl.dto.request.PlayerUpdateRequest;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
 import com.cricket.mpl.dto.response.PlayerSoldDto;
 import com.cricket.mpl.dto.response.RetainRequestsResponseDto;
@@ -15,6 +16,8 @@ public interface PlayerService {
 
     void addPlayer(PlayerRequest player);
     void addPlayer(PlayerRequest player,Integer userId);
+
+    void updatePlayer(PlayerUpdateRequest playerUpdateRequest);
 
     List<PlayerResponseDto> getAllPlayersByTeam(Integer teamId);
 
