@@ -6,7 +6,6 @@ import com.cricket.mpl.dto.response.AuctionResponseDTO;
 import com.cricket.mpl.dto.response.AuctionTeamsResponseDTO;
 import com.cricket.mpl.entity.Auction;
 import com.cricket.mpl.entity.AuctionTeam;
-import com.cricket.mpl.entity.Team;
 import com.cricket.mpl.repository.AuctionRepository;
 import com.cricket.mpl.repository.AuctionTeamRepository;
 import com.cricket.mpl.service.AuctionService;
@@ -14,8 +13,6 @@ import com.cricket.mpl.service.TeamService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class AuctionServiceImpl implements AuctionService {
@@ -48,6 +45,7 @@ public class AuctionServiceImpl implements AuctionService {
                     .auctionDate(auction.getAuctionDate())
                     .auctionName(auction.getAuctionName())
                     .status(auction.getStatus())
+                    .autoSale(auction.getAutoSale())
                     .isActive(auction.getIsActive()).build()).toList();
         }
         return null;
@@ -74,6 +72,7 @@ public class AuctionServiceImpl implements AuctionService {
                         .auctionDate(auction.getAuctionDate())
                         .auctionName(auction.getAuctionName())
                         .status(auction.getStatus())
+                        .autoSale(auction.getAutoSale())
                         .isActive(auction.getIsActive()).build()).toList();
             }
         return List.of();
@@ -90,6 +89,7 @@ public class AuctionServiceImpl implements AuctionService {
                     .auctionName(auction.getAuctionName())
                     .auctionDate(auction.getAuctionDate())
                     .status(auction.getStatus())
+                    .autoSale(auction.getAutoSale())
                     .isActive(auction.getIsActive())
                     .build();
         }
@@ -114,6 +114,7 @@ public class AuctionServiceImpl implements AuctionService {
                     .auctionDate(auction.getAuctionDate())
                     .auctionName(auction.getAuctionName())
                     .status(auction.getStatus())
+                    .autoSale(auction.getAutoSale())
                     .isActive(auction.getIsActive()).build()).toList();
         }
         return List.of();
@@ -149,5 +150,13 @@ public class AuctionServiceImpl implements AuctionService {
                     .build()).toList();
         }
         return null;
+    }
+
+    @Override
+    public String updateAuction(Integer auctionId, String action) {
+        Auction auction = auctionRepository.findById(auctionId).get();
+        auction.setAutoSale(action.equals("ON"));
+        auctionRepository.save(auction);
+        return "Auto sale has been set to "+action.equals("ON");
     }
 }

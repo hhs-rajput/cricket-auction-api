@@ -25,4 +25,6 @@ public interface AuctionService {
    String register(AuctionRegisterRequest auctionRegisterRequest);
 
    List<AuctionTeamsResponseDTO> getAuctionTeams(Integer auctionId);
+
+   String updateAuction(Integer auctionId, String action);
 }

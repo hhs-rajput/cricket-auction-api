@@ -23,6 +23,10 @@ public class Auction {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "auto_sale")
+    private Boolean autoSale;
+
     @Column(name = "auction_date")
     private LocalDateTime auctionDate;
 

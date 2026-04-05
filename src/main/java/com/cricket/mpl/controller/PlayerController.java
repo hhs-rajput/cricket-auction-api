@@ -58,7 +58,7 @@ public class PlayerController {
         UserRequest userRequest = new UserRequest();
         userRequest.setUsername(playerRequest.getPhoneNumber());
         userRequest.setName(playerRequest.getPlayerName());
-        userRequest.setPassword("test");
+        userRequest.setPassword(playerRequest.getPhoneNumber());
         userRequest.setRole(Constants.USER_ROLE_PLAYER.getValue());
         User user = userService.addUser(userRequest);
         playerRequest.setUserId(user.getUserId());

@@ -90,4 +90,10 @@ public class AuctionController {
         return playerBidService.getCurrentPlayer(auctionId,teamId);
     }
 
+    @PutMapping("/auto-sale/{auctionId}/{action}")
+    public String complete(@PathVariable Integer auctionId,@PathVariable String action) {
+        System.out.println("Received request to auto-sale for the auction.");
+        return auctionService.updateAuction(auctionId,action);
+    }
+
 }

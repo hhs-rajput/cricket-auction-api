@@ -47,6 +47,7 @@ CREATE TABLE mpl.users (
 CREATE TABLE mpl.auction (
     auction_id SERIAL PRIMARY KEY,
     auction_name VARCHAR(255) not null,
+    auto_sale BOOLEAN DEFAULT FALSE,
     active BOOLEAN DEFAULT FALSE,
     status VARCHAR(255) not null,
     auction_date TIMESTAMP not null

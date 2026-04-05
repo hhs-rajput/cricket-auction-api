@@ -13,4 +13,5 @@ public class AuctionResponseDTO {
     private String auctionName;
     private LocalDateTime auctionDate;
     private String status;
+    private Boolean autoSale;
 }

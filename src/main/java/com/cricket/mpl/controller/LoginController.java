@@ -1,6 +1,7 @@
 package com.cricket.mpl.controller;
 
 import com.cricket.mpl.dto.request.LoginRequest;
+import com.cricket.mpl.dto.request.UpdatePasswordRequest;
 import com.cricket.mpl.dto.response.LoginResponse;
 import com.cricket.mpl.entity.Team;
 import com.cricket.mpl.entity.User;
@@ -38,5 +39,11 @@ public class LoginController {
                 .teamStatus(team!=null?team.getTeamStatus():null)
                 .userId(user.getUserId())
                 .build();
+    }
+
+    @PostMapping("/reset-password")
+    public String updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest){
+        loginService.updatePassword(updatePasswordRequest);
+        return "Password updated successfully";
     }
 }

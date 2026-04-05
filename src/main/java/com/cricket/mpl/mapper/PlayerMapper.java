@@ -19,6 +19,7 @@ public class PlayerMapper {
         player.setSold(playerRequest.isSold());
         player.setSoldPrice(playerRequest.getSoldPrice());
         player.setTeamId(playerRequest.getTeam());
+        player.setCaption(Boolean.FALSE);
         player.setPlayerCategory(playerRequest.getPlayerCategory());
         player.setUserId(playerRequest.getUserId());
         return player;
