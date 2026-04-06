@@ -131,6 +131,38 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional
+    public PlayerSoldDto sellPlayer(Integer playerBidId) {
+        PlayerBid playerBid = playerBidRepository.findById(playerBidId).get();
+
+        playerBidRepository.findById(playerBidId);
+        AuctionTeam auctionTeam = auctionTeamRepository.
+                findByAuctionIdAndTeamId
+                        (playerBid.getAuctionId(), playerBid.getLeadingTeamId());
+        auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()-playerBid.getBidAmount());
+        auctionTeamRepository.save(auctionTeam);
+
+
+        playerBid.setStatus("BID_CLOSED");
+        playerBidRepository.save(playerBid);
+
+
+        Player player = playerRepository.findById(playerBid.getPlayerId()).get();
+        player.setSold(Boolean.TRUE);
+        player.setTeamId(playerBid.getLeadingTeamId());
+        player.setSoldPrice(playerBid.getBidAmount());
+        playerRepository.save(player);
+        PlayerSoldDto playerSoldDto = PlayerSoldDto.builder()
+                .playerId(playerBid.getPlayerId())
+                .playerName(player.getPlayerName())
+                .leadingTeamName(auctionTeam.getTeamName())
+                .leadingTeamId(auctionTeam.getTeamId()).build();
+        messagingTemplate.convertAndSend("/topic/sell-player/"+playerBid.getAuctionId() ,
+                playerSoldDto);
+        return playerSoldDto;
+    }
+
+    @Override
+    @Transactional
     public void retainPlayer(RetainPlayerRequest retainPlayerRequest) {
         PlayerRetention byAuctionIdAndTeamId = playerRetentionRepository.findByAuctionIdAndTeamIdAndStatus(retainPlayerRequest.getAuctionId(), retainPlayerRequest.getTeamId(),"REVIEW");
         if(byAuctionIdAndTeamId!=null && !byAuctionIdAndTeamId.getStatus().equalsIgnoreCase("rejected")){

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerBidRequest {
     private Integer playerBidId;
+    private Boolean autoSale;
     private Integer auctionId;
     private Integer teamId;
     private Integer playerId;

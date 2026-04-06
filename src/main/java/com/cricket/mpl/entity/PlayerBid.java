@@ -3,6 +3,8 @@ package com.cricket.mpl.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "player_bid", schema = "mpl")
 @Getter
@@ -40,6 +42,15 @@ public class PlayerBid {
 
     @Column(name = "player_base_price")
     private Integer playerBasePrice;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Column(name = "auto_sale",nullable = false)
+    private Boolean autoSale;
 
 
 }

@@ -82,14 +82,15 @@ CREATE TABLE mpl.auction_team_mapping (
 
 
 
-CREATE TABLE mpl.player_bid_transactions  (
-    player_bid_id SERIAL PRIMARY KEY,
+CREATE TABLE mpl.player_bid_transactions (
+	transaction_id SERIAL PRIMARY key,
+    player_bid_id INTEGER NOT NULL,
     auction_id INTEGER NOT NULL,
-    INTEGER  ,
-    player_id INTEGER  NOT NULL,
-    created_by INTEGER  NOT NULL,
-    status VARCHAR(10) NOT null,
-    last_updated_by INTEGER  NOT NULL
+    team_id INTEGER,
+    player_id INTEGER NOT NULL,
+    player_base_price INTEGER NOT NULL,
+    bid_amount INTEGER,
+    created_by INTEGER NOT NULL
 );
 
 CREATE TABLE mpl.player_bid (
@@ -102,8 +103,12 @@ CREATE TABLE mpl.player_bid (
     status VARCHAR(20) NOT NULL,
     created_by INTEGER NOT NULL,
     last_updated_by INTEGER NOT NULL,
+	auto_sale BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+
     CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
-    CONSTRAINT unique_auction_player_status UNIQUE (auction_id,player_id, status)
+    CONSTRAINT unique_auction_player_status UNIQUE (auction_id, player_id, status)
 );
 
 CREATE TABLE mpl.player_bid_transactions (

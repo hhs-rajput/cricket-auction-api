@@ -1,6 +1,7 @@
 package com.cricket.mpl.service.impl;
 
 import com.cricket.mpl.dto.request.PlayerBidRequest;
+import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.LiveAuctionCurrentPlayerResponseDTO;
 import com.cricket.mpl.dto.response.PlayerBidResponse;
 import com.cricket.mpl.entity.AuctionTeam;
@@ -12,8 +13,14 @@ import com.cricket.mpl.repository.PlayerBidRepository;
 import com.cricket.mpl.repository.PlayerBidTransactionRepository;
 import com.cricket.mpl.repository.PlayerRepository;
 import com.cricket.mpl.service.PlayerBidService;
+import com.cricket.mpl.service.PlayerService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class PlayerBidServiceImpl implements PlayerBidService {
@@ -23,13 +30,16 @@ public class PlayerBidServiceImpl implements PlayerBidService {
     private final PlayerRepository playerRepository;
     private final AuctionTeamRepository auctionTeamRepository;
     private final AuctionWebSocketService auctionWebSocketService;
+    private final PlayerService playerService;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository, AuctionTeamRepository auctionTeamRepository, AuctionWebSocketService auctionWebSocketService) {
+    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository, AuctionTeamRepository auctionTeamRepository, AuctionWebSocketService auctionWebSocketService, PlayerService playerService) {
         this.playerBidRepository = playerBidRepository;
         this.playerBidTransactionRepository = playerBidTransactionRepository;
         this.playerRepository = playerRepository;
         this.auctionTeamRepository = auctionTeamRepository;
         this.auctionWebSocketService = auctionWebSocketService;
+        this.playerService = playerService;
     }
 
     @Override
@@ -42,10 +52,19 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         playerBid.setAuctionId(playerBidRequest.getAuctionId());
         playerBid.setPlayerId(playerBidRequest.getPlayerId());
         playerBid.setStatus("BID_STARTED");
-        playerBid.setCreatedBy(playerBidRequest.getUserId());
-        playerBid.setLastUpdatedBy((playerBidRequest.getUserId()));
         playerBid.setPlayerBasePrice(playerBidRequest.getBasePrice());
+        playerBid.setAutoSale(playerBidRequest.getAutoSale());
+        playerBid.setCreatedAt(LocalDateTime.now());
+        playerBid.setUpdatedAt(LocalDateTime.now());
+        playerBid.setCreatedBy(playerBidRequest.getUserId());
+        playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
         playerBidRepository.save(playerBid);
+
+        if (playerBidRequest.getAutoSale()) {
+            scheduler.schedule(() -> {
+                Object o = playerService.sellPlayer(playerBid.getPlayerBidId());
+            }, 30, TimeUnit.SECONDS);
+        }
     }
 
     @Override
@@ -69,8 +88,10 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         responseDTO.setPlayerName(player.getPlayerName());
         responseDTO.setBasePrice(player.getBasePrice());
         responseDTO.setPlayerRole(player.getPlayerRole());
+        responseDTO.setAutoSale(playerBid.getAutoSale());
         responseDTO.setLeadingTeamName(leadingTeamName);
         responseDTO.setLeadingTeamId(playerBid.getLeadingTeamId());
+        responseDTO.setCreatedAt(playerBid.getCreatedAt());
         responseDTO.setPlayerCategory(player.getPlayerCategory());
         return responseDTO;
     }
@@ -82,6 +103,7 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         PlayerBid playerBid = playerBidRepository.findById(playerBidRequest.getPlayerBidId()).get();
         playerBid.setBidAmount(playerBidRequest.getBidAmount());
         playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
+        playerBid.setUpdatedAt(LocalDateTime.now());
         playerBid.setLeadingTeamId(playerBidRequest.getTeamId());
         PlayerBidTransaction playerBidTransaction = getPlayerBidTransaction(playerBidRequest);
         playerBidRepository.save(playerBid);

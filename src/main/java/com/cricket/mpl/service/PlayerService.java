@@ -23,8 +23,6 @@ public interface PlayerService {
 
     List<PlayerResponseDto> getAllPlayers(String category);
 
-    PlayerSoldDto sellPlayer(SellPlayerRequest sellPlayerRequest);
-
     void retainPlayer(RetainPlayerRequest retainPlayerRequest);
 
     List<RetainRequestsResponseDto> getAllRetainRequests();
@@ -32,4 +30,8 @@ public interface PlayerService {
     void retainApprove(RetainApproveRequest retainApproveRequest);
 
     void retainReject(RetainApproveRequest retainApproveRequest);
+
+    Object sellPlayer(Integer playerBidId);
+
+    PlayerSoldDto sellPlayer(SellPlayerRequest sellPlayerRequest);
 }
