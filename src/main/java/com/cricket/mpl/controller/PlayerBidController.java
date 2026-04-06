@@ -19,6 +19,11 @@ public class PlayerBidController {
         this.playerBidService = playerBidService;
     }
 
+    @GetMapping("/cancel")
+    public String cancel(@RequestParam Integer playerBidId){
+        playerBidService.cancelBid(playerBidId);
+        return "Bid Cancelled successfully";
+    }
 
     @PostMapping
     public String startBid(@RequestBody PlayerBidRequest playerBidRequest) {

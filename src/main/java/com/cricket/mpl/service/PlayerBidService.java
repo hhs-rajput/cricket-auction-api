@@ -12,4 +12,6 @@ public interface PlayerBidService {
     PlayerBidResponse updateBid(PlayerBidRequest playerBidRequest);
 
     boolean isBiddingOn(Integer auctionId);
+
+    void cancelBid(Integer playerBidId);
 }

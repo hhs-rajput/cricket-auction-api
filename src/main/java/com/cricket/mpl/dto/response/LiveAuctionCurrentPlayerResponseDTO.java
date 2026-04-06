@@ -21,6 +21,7 @@ public class LiveAuctionCurrentPlayerResponseDTO {
     private String playerCategory;
     private Integer basePrice;
     private Integer currentBidAmount;
+    private Integer sellTime;
     private Integer leadingTeamId;
     private String leadingTeamName;
     private LocalDateTime createdAt;

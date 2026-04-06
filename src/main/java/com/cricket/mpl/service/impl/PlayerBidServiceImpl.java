@@ -93,6 +93,9 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         responseDTO.setLeadingTeamId(playerBid.getLeadingTeamId());
         responseDTO.setCreatedAt(playerBid.getCreatedAt());
         responseDTO.setPlayerCategory(player.getPlayerCategory());
+        if (playerBid.getAutoSale()) {
+            responseDTO.setSellTime(35);
+        }
         return responseDTO;
     }
 
@@ -131,6 +134,21 @@ public class PlayerBidServiceImpl implements PlayerBidService {
     public boolean isBiddingOn(Integer auctionId) {
         PlayerBid existingBid = playerBidRepository.findByAuctionIdAndStatus(auctionId, "BID_STARTED");
         return existingBid != null;
+    }
+
+    @Override
+    public void cancelBid(Integer playerBidId) {
+        PlayerBid playerBid = playerBidRepository.findById(playerBidId).get();
+        playerBidRepository.deleteById(playerBidId);
+        Integer playerId = playerBid.getPlayerId();
+        Player player = playerRepository.findById(playerId).get();
+        if(player.isSold()){
+            player.setSold(false);
+            player.setSoldPrice(0);
+            player.setTeamId(null);
+        }
+        playerRepository.save(player);
+
     }
 
     private static PlayerBidTransaction getPlayerBidTransaction(PlayerBidRequest playerBidRequest) {
