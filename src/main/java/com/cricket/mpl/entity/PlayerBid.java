@@ -52,5 +52,8 @@ public class PlayerBid {
     @Column(name = "auto_sale",nullable = false)
     private Boolean autoSale;
 
+    @Column(name = "auto_sell_time_in_seconds")
+    private Integer autoSellTimeInSeconds;
+
 
 }

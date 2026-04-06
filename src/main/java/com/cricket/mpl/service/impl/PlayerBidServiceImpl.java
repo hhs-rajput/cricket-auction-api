@@ -1,7 +1,6 @@
 package com.cricket.mpl.service.impl;
 
 import com.cricket.mpl.dto.request.PlayerBidRequest;
-import com.cricket.mpl.dto.request.SellPlayerRequest;
 import com.cricket.mpl.dto.response.LiveAuctionCurrentPlayerResponseDTO;
 import com.cricket.mpl.dto.response.PlayerBidResponse;
 import com.cricket.mpl.entity.AuctionTeam;
@@ -48,6 +47,7 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         if (existingBid != null) {
             throw new RuntimeException("A bid is already in progress for this auction.");
         }
+        Player player = playerRepository.findById(playerBidRequest.getPlayerId()).get();
         PlayerBid playerBid=new PlayerBid();
         playerBid.setAuctionId(playerBidRequest.getAuctionId());
         playerBid.setPlayerId(playerBidRequest.getPlayerId());
@@ -58,12 +58,13 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         playerBid.setUpdatedAt(LocalDateTime.now());
         playerBid.setCreatedBy(playerBidRequest.getUserId());
         playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
+        playerBid.setAutoSellTimeInSeconds(getAutoSellTimerSeconds(player.getPlayerCategory()));
         playerBidRepository.save(playerBid);
 
         if (playerBidRequest.getAutoSale()) {
             scheduler.schedule(() -> {
                 Object o = playerService.sellPlayer(playerBid.getPlayerBidId());
-            }, 30, TimeUnit.SECONDS);
+            }, playerBid.getAutoSellTimeInSeconds(), TimeUnit.SECONDS);
         }
     }
 
@@ -93,10 +94,18 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         responseDTO.setLeadingTeamId(playerBid.getLeadingTeamId());
         responseDTO.setCreatedAt(playerBid.getCreatedAt());
         responseDTO.setPlayerCategory(player.getPlayerCategory());
-        if (playerBid.getAutoSale()) {
-            responseDTO.setSellTime(35);
-        }
+        responseDTO.setSellTime(playerBid.getAutoSellTimeInSeconds());
         return responseDTO;
+    }
+
+    private static int getAutoSellTimerSeconds(String category) {
+        return switch (category) {
+            case "A" -> 90;
+            case "B" -> 60;
+            case "C" -> 45;
+            case "D" -> 30;
+            default -> throw new IllegalArgumentException("Invalid category: " + category);
+        };
     }
 
     @Override

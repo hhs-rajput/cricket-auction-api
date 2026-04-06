@@ -106,6 +106,7 @@ CREATE TABLE mpl.player_bid (
 	auto_sale BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
+    auto_sell_time_in_seconds INTEGER,
 
     CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
     CONSTRAINT unique_auction_player_status UNIQUE (auction_id, player_id, status)
