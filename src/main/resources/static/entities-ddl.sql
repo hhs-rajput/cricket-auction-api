@@ -19,6 +19,7 @@ CREATE TABLE mpl.players (
     player_role varchar(50),
     base_price INTEGER DEFAULT 0,
     sold BOOLEAN DEFAULT FALSE,
+    admin BOOLEAN DEFAULT FALSE,
     caption BOOLEAN not null DEFAULT FALSE,
     sold_price INTEGER DEFAULT 0,
     team_id INTEGER,

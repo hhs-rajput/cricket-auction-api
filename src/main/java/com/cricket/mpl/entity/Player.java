@@ -43,4 +43,7 @@ public class Player {
     @Column(name = "caption")
     private Boolean caption;
 
+    @Column(name = "admin")
+    private boolean admin;
+
 }
