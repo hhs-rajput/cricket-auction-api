@@ -17,7 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-auction")
-                .setAllowedOrigins("http://13.232.247.16")
+                .setAllowedOrigins("localhost:3000")
                 .withSockJS(); // for fallback
     }
 }
