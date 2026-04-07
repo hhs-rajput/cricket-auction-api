@@ -33,12 +33,12 @@ host    all    all    0.0.0.0/0    md5
 
 
 
-
+command to upload jar
 scp -i C:\Users\prashantrajput01\Downloads\prashant-ec2-001.pem C:\Users\prashantrajput01\Downloads\MPL-AUCTION\cricket-auction-api\target\MPL-AUCTION-0.0.1-SNAPSHOT.jar ubuntu@13.232.247.16:/home/ubuntu/
 
 "C:\Users\prashantrajput01\learning\REACT JS\New folder\cricket-auction-ui\build"
 
-
+command to upload front end
 scp -i "C:\Users\prashantrajput01\Downloads\prashant-ec2-001.pem" -r "C:/Users/prashantrajput01/learning/REACT JS/New folder/cricket-auction-ui/build" ubuntu@13.232.247.16:/home/ubuntu/
 
 
@@ -109,3 +109,34 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
+
+
+
+
+[Unit]
+Description=Cricket Auction Spring Boot App
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/java -jar /home/ubuntu/MPL-AUCTION-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl start cri-auction
+sudo systemctl enable cri-auction
+sudo systemctl status cri-auction
+
+
+
+if new build
+sudo systemctl stop cri-auction
+rm /home/ubuntu/MPL-AUCTION-0.0.1-SNAPSHOT.jar
+Move/upload the new jar to the same location:
+sudo systemctl start cri-auction
