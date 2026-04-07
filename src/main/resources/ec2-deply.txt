@@ -133,10 +133,20 @@ sudo systemctl start cri-auction
 sudo systemctl enable cri-auction
 sudo systemctl status cri-auction
 
+Copilot Chat:Open Chat
 
-
-if new build
+if new backend build
 sudo systemctl stop cri-auction
 rm /home/ubuntu/MPL-AUCTION-0.0.1-SNAPSHOT.jar
 Move/upload the new jar to the same location:
 sudo systemctl start cri-auction
+
+if new front end build
+
+rm -rf build
+//move new build
+sudo rm -rf /var/www/html/*
+sudo cp -r /home/ubuntu/build/* /var/www/html/
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+sudo systemctl restart nginx
