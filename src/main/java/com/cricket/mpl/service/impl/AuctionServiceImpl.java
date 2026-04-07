@@ -10,6 +10,7 @@ import com.cricket.mpl.repository.AuctionRepository;
 import com.cricket.mpl.repository.AuctionTeamRepository;
 import com.cricket.mpl.service.AuctionService;
 import com.cricket.mpl.service.TeamService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -100,11 +101,19 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    @Transactional
     public AuctionResponseDTO complete(Integer auctionId) {
         Auction auction = auctionRepository.findById(auctionId).get();
         auction.setIsActive(Boolean.FALSE);
         auction.setStatus("COMPLETED");
         auctionRepository.save(auction);
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findByAuctionId(auction.getAuctionId());
+        if(auctionTeams!=null && !auctionTeams.isEmpty()){
+            for(AuctionTeam auctionTeam:auctionTeams){
+                auctionTeam.setAuctionCompleted(Boolean.TRUE);
+            }
+            auctionTeamRepository.saveAll(auctionTeams);
+        }
         return AuctionResponseDTO.builder().auctionId(auction.getAuctionId()).isActive(auction.getIsActive()).build();
     }
 

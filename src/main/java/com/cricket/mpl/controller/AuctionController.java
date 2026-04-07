@@ -49,7 +49,7 @@ public class AuctionController {
                     new ApiResponse<>(true, "Auction Found", userAuction)
             );
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(false, "No User Auction Found", null));
     }
     @GetMapping("/getActiveAuctions")

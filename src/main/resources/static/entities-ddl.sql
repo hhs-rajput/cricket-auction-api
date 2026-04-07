@@ -1,3 +1,12 @@
+CREATE TABLE mpl.users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT null UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    team VARCHAR(100),
+    password VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE mpl.player_retention (
     retention_id SERIAL PRIMARY KEY,
     player_id INTEGER not null,
@@ -9,7 +18,7 @@ CREATE TABLE mpl.player_retention (
     status VARCHAR(20),
     retain_price INTEGER ,
     created_by INTEGER not null,
-    updated_by INTEGER not null,
+    updated_by INTEGER not null
 );
 
 
@@ -19,7 +28,6 @@ CREATE TABLE mpl.players (
     player_role varchar(50),
     base_price INTEGER DEFAULT 0,
     sold BOOLEAN DEFAULT FALSE,
-    admin BOOLEAN DEFAULT FALSE,
     caption BOOLEAN not null DEFAULT FALSE,
     sold_price INTEGER DEFAULT 0,
     team_id INTEGER,
@@ -36,14 +44,7 @@ CREATE TABLE mpl.players (
 );
 
 
-CREATE TABLE mpl.users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(100) NOT null UNIQUE,
-    name VARCHAR(100) NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    team VARCHAR(100),
-    password VARCHAR(100) NOT NULL
-);
+
 CREATE TABLE mpl.auction (
     auction_id SERIAL PRIMARY KEY,
     auction_name VARCHAR(255) not null,
@@ -65,20 +66,17 @@ CREATE TABLE mpl.teams (
 );
 
 
-
 CREATE TABLE mpl.auction_team_mapping (
     auction_team_mapping_id SERIAL PRIMARY KEY,
     auction_id INTEGER NOT NULL,
     team_id INTEGER  NOT NULL,
-    team_name VARCHAR(255) NOT NULL,
     auction_completed boolean default false,
+    team_name VARCHAR(255) NOT NULL,
     caption_user_id INTEGER NOT null,
     total_purse INTEGER,
 	remaining_purse INTEGER,
 	CONSTRAINT uq_auction_team UNIQUE (auction_id, team_id)
 );
-
-
 
 
 
@@ -112,15 +110,4 @@ CREATE TABLE mpl.player_bid (
 
     CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
     CONSTRAINT unique_auction_player_status UNIQUE (auction_id, player_id, status)
-);
-
-CREATE TABLE mpl.player_bid_transactions (
-	transaction_id SERIAL PRIMARY key,
-    player_bid_id INTEGER NOT NULL,
-    auction_id INTEGER NOT NULL,
-    team_id INTEGER,
-    player_id INTEGER NOT NULL,
-    player_base_price INTEGER NOT NULL,
-    bid_amount INTEGER,
-    created_by INTEGER NOT NULL
 );
