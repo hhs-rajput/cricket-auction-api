@@ -1,0 +1,111 @@
+ssh -i prashant-ec2-001.pem ubuntu@13.232.247.16
+
+ sudo apt install nginx -y
+sudo systemctl start nginx
+ sudo systemctl status nginx
+sudo apt update
+sudo apt install openjdk-17-jdk nginx postgresql postgresql-contrib -y
+
+java -version
+psql --version
+nginx -v
+
+sudo -u postgres psql
+\q
+
+sudo nano /etc/postgresql/*/main/postgresql.conf
+
+#listen_addresses = 'localhost'
+
+change to 
+
+listen_addresses = '*'
+
+sudo nano /etc/postgresql/*/main/pg_hba.conf
+
+sudo systemctl restart PostgreSQL
+
+host    all    all    0.0.0.0/0    md5
+
+
+"C:\Users\prashantrajput01\Downloads\prashant-ec2-001.pem"
+"C:\Users\prashantrajput01\Downloads\MPL-AUCTION\cricket-auction-api\target\MPL-AUCTION-0.0.1-SNAPSHOT.jar"
+
+
+
+
+scp -i C:\Users\prashantrajput01\Downloads\prashant-ec2-001.pem C:\Users\prashantrajput01\Downloads\MPL-AUCTION\cricket-auction-api\target\MPL-AUCTION-0.0.1-SNAPSHOT.jar ubuntu@13.232.247.16:/home/ubuntu/
+
+"C:\Users\prashantrajput01\learning\REACT JS\New folder\cricket-auction-ui\build"
+
+
+scp -i "C:\Users\prashantrajput01\Downloads\prashant-ec2-001.pem" -r "C:/Users/prashantrajput01/learning/REACT JS/New folder/cricket-auction-ui/build" ubuntu@13.232.247.16:/home/ubuntu/
+
+
+
+sudo nano /etc/nginx/sites-available/default
+
+
+
+
+
+edit above file content with below
+
+
+server { listen 80; server_name _; root /var/www/html; index index.html; # Serve React location / { try_files $uri /index.html; } # Proxy API requests to Spring Boot location /api/ { proxy_pass http://localhost:8080/; proxy_http_version 1.1; proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection keep-alive; proxy_set_header Host $host; proxy_cache_bypass $http_upgrade; } }
+
+sudo nginx -t
+sudo rm -rf /var/www/html/*
+sudo cp -r /home/ubuntu/build/* /var/www/html/
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
+sudo systemctl restart nginx
+
+sudo nginx -t
+sudo systemctl restart nginx
+
+
+
+
+
+
+
+
+
+
+
+
+
+server {
+    listen 80;
+    server_name _;
+
+    # React frontend
+    root /var/www/html;
+
+   index index.html;
+
+    # Serve React app
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # API proxy to Spring Boot
+    location /api/ {
+        proxy_pass http://localhost:8080;   # no trailing slash
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection keep-alive;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # WebSocket proxy to Spring Boot
+    location /ws-auction/ {
+        proxy_pass http://localhost:8080/ws-auction/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
