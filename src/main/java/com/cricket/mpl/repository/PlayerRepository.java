@@ -18,4 +18,7 @@ public interface PlayerRepository extends JpaRepository<Player,Integer> {
 
     List<Player> findBySoldAndCaptionAndPlayerCategory(boolean sold, boolean caption, String category);
 
+    List<Player> findByAdmin(Boolean admin);
+
+    List<Player> findBySoldAndCaptionAndAdminAndPlayerCategory(boolean sold, boolean caption,boolean admin, String category);
 }

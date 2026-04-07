@@ -47,7 +47,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<PlayerResponseDto> getAllPlayers() {
-        List<Player> allPlayers = playerRepository.findAll();
+        List<Player> allPlayers = playerRepository.findByAdmin(Boolean.FALSE);
         List<Team> allTeams = teamRepository.findAll();
         Map<Integer, String> teamIdNameMap = null;
         if (!allTeams.isEmpty()) {
@@ -94,7 +94,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<PlayerResponseDto> getAllPlayers(String category) {
-        List<Player> allPlayers = playerRepository.findBySoldAndCaptionAndPlayerCategory(false,false,category);
+        List<Player> allPlayers = playerRepository.findBySoldAndCaptionAndAdminAndPlayerCategory(false,false,false,category);
         List<Team> allTeams = teamRepository.findAll();
         Map<Integer, String> teamIdNameMap = null;
         if (!allTeams.isEmpty()) {
