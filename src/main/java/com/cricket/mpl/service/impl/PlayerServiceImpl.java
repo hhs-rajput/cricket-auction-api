@@ -74,6 +74,7 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = playerRepository.findById(playerUpdateRequest.getPlayerId())
                 .orElseThrow(() -> new RuntimeException("Player not found"));
         player.setPlayerName(playerUpdateRequest.getPlayerName());
+        player.setPlayerRole(playerUpdateRequest.getPlayerRole());
         player.setPlayerCategory(playerUpdateRequest.getPlayerCategory());
         player.setBasePrice(playerUpdateRequest.getBasePrice());
         player.setCaption(playerUpdateRequest.getCaption());
