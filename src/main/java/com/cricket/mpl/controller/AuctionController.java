@@ -65,7 +65,7 @@ public class AuctionController {
 
     @PutMapping("/complete/{auctionId}")
     public AuctionResponseDTO complete(@PathVariable Integer auctionId) {
-        System.out.println("Received request to start auction");
+        System.out.println("Received request to complete auction");
         return auctionService.complete(auctionId);
     }
 

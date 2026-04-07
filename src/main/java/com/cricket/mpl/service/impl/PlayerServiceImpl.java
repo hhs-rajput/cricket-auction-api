@@ -32,9 +32,10 @@ public class PlayerServiceImpl implements PlayerService {
     private final AuctionTeamRepository auctionTeamRepository;
     private final PlayerRetentionRepository playerRetentionRepository;
     private final UserRepository userRepository;
+    private final AuctionRepository auctionRepository;
 
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository, UserRepository userRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository, UserRepository userRepository, AuctionRepository auctionRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.playerMapper = playerMapper;
@@ -43,6 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
         this.auctionTeamRepository = auctionTeamRepository;
         this.playerRetentionRepository = playerRetentionRepository;
         this.userRepository = userRepository;
+        this.auctionRepository = auctionRepository;
     }
 
     @Override
@@ -165,6 +167,11 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @Transactional
     public void retainPlayer(RetainPlayerRequest retainPlayerRequest) {
+
+        Auction auction = auctionRepository.findById(retainPlayerRequest.getAuctionId()).get();
+        if(auction.getStatus().equals("COMPLETED")) {
+            throw new RuntimeException(auction.getAuctionName()+" is already completed, please register for different auction.");
+        }
         PlayerRetention byAuctionIdAndTeamId = playerRetentionRepository.findByAuctionIdAndTeamIdAndStatus(retainPlayerRequest.getAuctionId(), retainPlayerRequest.getTeamId(),"REVIEW");
         if(byAuctionIdAndTeamId!=null && !byAuctionIdAndTeamId.getStatus().equalsIgnoreCase("rejected")){
             throw new RuntimeException("You cannot retain more than one player for the same auction.");

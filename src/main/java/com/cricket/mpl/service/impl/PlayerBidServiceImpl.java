@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,8 +55,8 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         playerBid.setStatus("BID_STARTED");
         playerBid.setPlayerBasePrice(playerBidRequest.getBasePrice());
         playerBid.setAutoSale(playerBidRequest.getAutoSale());
-        playerBid.setCreatedAt(LocalDateTime.now());
-        playerBid.setUpdatedAt(LocalDateTime.now());
+        playerBid.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
+        playerBid.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
         playerBid.setCreatedBy(playerBidRequest.getUserId());
         playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
         playerBid.setAutoSellTimeInSeconds(getAutoSellTimerSeconds(player.getPlayerCategory()));
@@ -115,7 +116,7 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         PlayerBid playerBid = playerBidRepository.findById(playerBidRequest.getPlayerBidId()).get();
         playerBid.setBidAmount(playerBidRequest.getBidAmount());
         playerBid.setLastUpdatedBy(playerBidRequest.getUserId());
-        playerBid.setUpdatedAt(LocalDateTime.now());
+        playerBid.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
         playerBid.setLeadingTeamId(playerBidRequest.getTeamId());
         PlayerBidTransaction playerBidTransaction = getPlayerBidTransaction(playerBidRequest);
         playerBidRepository.save(playerBid);

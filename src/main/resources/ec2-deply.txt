@@ -150,3 +150,5 @@ sudo cp -r /home/ubuntu/build/* /var/www/html/
 sudo chown -R www-data:www-data /var/www/html
 sudo chmod -R 755 /var/www/html
 sudo systemctl restart nginx
+
+ssh -i prashant-ec2-001.pem ubuntu@13.232.247.16

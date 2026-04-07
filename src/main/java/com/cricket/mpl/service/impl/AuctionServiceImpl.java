@@ -12,6 +12,7 @@ import com.cricket.mpl.service.AuctionService;
 import com.cricket.mpl.service.TeamService;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -80,8 +81,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public AuctionResponseDTO getUserAuction(Integer userId, Integer teamId) {
-        AuctionTeam auctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamId(userId,teamId);
-        Auction auction = null;
+        AuctionTeam auctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamIdAndAuctionCompleted(userId,teamId,Boolean.FALSE);
+        Auction auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
+        if(auction.getStatus().equals("COMPLETED")) return null;
+
         if (auctionTeam != null) {
             auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
             return AuctionResponseDTO.builder()
@@ -107,7 +110,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionResponseDTO> getUpcomingAuctions() {
-        List<Auction> all = auctionRepository.findByStatusAndAuctionDateAfter("NOT_STARTED",java.time.LocalDateTime.now());
+        List<Auction> all = auctionRepository.findByStatusAndAuctionDateAfter("NOT_STARTED",java.time.LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
         if(!all.isEmpty()){
             return all.stream().map(auction -> AuctionResponseDTO.builder()
                     .auctionId(auction.getAuctionId())
@@ -122,7 +125,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public String register(AuctionRegisterRequest auctionRegisterRequest) {
-        AuctionTeam existingAuctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamId(auctionRegisterRequest.getCaptionUserId(), auctionRegisterRequest.getTeamId());
+        AuctionTeam existingAuctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamIdAndAuctionCompleted(auctionRegisterRequest.getCaptionUserId(), auctionRegisterRequest.getTeamId(),Boolean.FALSE);
         if(existingAuctionTeam!=null){
             return "You have already registered for a different auction.";
         }

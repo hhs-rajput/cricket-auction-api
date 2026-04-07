@@ -71,6 +71,7 @@ CREATE TABLE mpl.auction_team_mapping (
     auction_id INTEGER NOT NULL,
     team_id INTEGER  NOT NULL,
     team_name VARCHAR(255) NOT NULL,
+    auction_completed boolean default false,
     caption_user_id INTEGER NOT null,
     total_purse INTEGER,
 	remaining_purse INTEGER,
