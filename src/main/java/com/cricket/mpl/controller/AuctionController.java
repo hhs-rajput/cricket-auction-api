@@ -69,6 +69,12 @@ public class AuctionController {
         return auctionService.complete(auctionId);
     }
 
+    @PutMapping("/restart/{auctionId}")
+    public AuctionResponseDTO restart(@PathVariable Integer auctionId) {
+        System.out.println("Received request to complete auction");
+        return auctionService.restart(auctionId);
+    }
+
     @PostMapping
     public String create(@RequestBody AuctionRequest auctionRequest){
         return auctionService.createAuction(auctionRequest);

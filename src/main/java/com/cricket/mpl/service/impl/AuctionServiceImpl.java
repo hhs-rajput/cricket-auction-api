@@ -171,4 +171,20 @@ public class AuctionServiceImpl implements AuctionService {
         auctionRepository.save(auction);
         return "Auto sale has been set to "+action.equals("ON");
     }
+
+    @Override
+    public AuctionResponseDTO restart(Integer auctionId) {
+        Auction auction = auctionRepository.findById(auctionId).get();
+        auction.setIsActive(Boolean.TRUE);
+        auction.setStatus("STARTED");
+        auctionRepository.save(auction);
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findByAuctionId(auction.getAuctionId());
+        if(auctionTeams!=null && !auctionTeams.isEmpty()){
+            for(AuctionTeam auctionTeam:auctionTeams){
+                auctionTeam.setAuctionCompleted(Boolean.FALSE);
+            }
+            auctionTeamRepository.saveAll(auctionTeams);
+        }
+        return AuctionResponseDTO.builder().auctionId(auction.getAuctionId()).isActive(auction.getIsActive()).build();
+    }
 }

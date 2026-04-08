@@ -153,11 +153,18 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         Integer playerId = playerBid.getPlayerId();
         Player player = playerRepository.findById(playerId).get();
         if(player.isSold()){
+            int soldPrice = player.getSoldPrice();
+            Integer playerTeamId = player.getTeamId();
             player.setSold(false);
             player.setSoldPrice(0);
             player.setTeamId(null);
+            playerRepository.save(player);
+            AuctionTeam auctionTeam = auctionTeamRepository.findByAuctionIdAndTeamId(playerBid.getAuctionId(), playerTeamId);
+            auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()+soldPrice);
+            auctionTeamRepository.save(auctionTeam);
         }
-        playerRepository.save(player);
+
+        playerBidRepository.deleteById(playerBidId);
 
     }
 

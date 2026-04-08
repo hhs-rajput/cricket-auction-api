@@ -27,4 +27,6 @@ public interface AuctionService {
    List<AuctionTeamsResponseDTO> getAuctionTeams(Integer auctionId);
 
    String updateAuction(Integer auctionId, String action);
+
+   AuctionResponseDTO restart(Integer auctionId);
 }

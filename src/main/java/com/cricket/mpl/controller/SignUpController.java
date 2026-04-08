@@ -34,6 +34,7 @@ public class SignUpController {
         PlayerRequest playerRequest = new PlayerRequest();
         playerRequest.setPlayerName(signUpRequest.getName());
         playerRequest.setPhoneNumber(signUpRequest.getMobile());
+        playerRequest.setPlayerCategory("A");
         return playerRequest;
     }
 

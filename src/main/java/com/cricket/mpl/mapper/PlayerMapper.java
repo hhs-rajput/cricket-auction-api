@@ -40,6 +40,7 @@ public class PlayerMapper {
                 responseDto.setTeam(teamIdNameMap.getOrDefault(player.getTeamId(),""));
             }
             responseDto.setPlayerCategory(player.getPlayerCategory());
+            responseDto.setPlayerRole(player.getPlayerRole());
             return responseDto;
         }).toList();
     }
