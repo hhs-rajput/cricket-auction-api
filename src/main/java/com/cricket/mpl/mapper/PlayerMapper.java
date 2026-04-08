@@ -39,6 +39,7 @@ public class PlayerMapper {
             if (teamIdNameMap!=null && player.getTeamId() != null) {
                 responseDto.setTeam(teamIdNameMap.getOrDefault(player.getTeamId(),""));
             }
+            responseDto.setPhoneNumber(player.getPhoneNumber());
             responseDto.setPlayerCategory(player.getPlayerCategory());
             responseDto.setPlayerRole(player.getPlayerRole());
             return responseDto;
@@ -50,6 +51,7 @@ public class PlayerMapper {
             PlayerResponseDto responseDto = new PlayerResponseDto();
             responseDto.setPlayerId(player.getPlayerId());
             responseDto.setPlayerName(player.getPlayerName());
+            responseDto.setPlayerRole(player.getPlayerRole());
             responseDto.setBasePrice(player.getBasePrice());
             responseDto.setSold(player.isSold());
             responseDto.setSoldPrice(player.getSoldPrice());

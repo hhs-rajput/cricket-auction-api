@@ -49,7 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<PlayerResponseDto> getAllPlayers() {
-        List<Player> allPlayers = playerRepository.findByAdmin(Boolean.FALSE);
+        List<Player> allPlayers = playerRepository.findAll();
         List<Team> allTeams = teamRepository.findAll();
         Map<Integer, String> teamIdNameMap = null;
         if (!allTeams.isEmpty()) {
