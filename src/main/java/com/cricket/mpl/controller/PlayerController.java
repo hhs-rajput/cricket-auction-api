@@ -78,6 +78,17 @@ public class PlayerController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Player updated successfully!", null));
     }
 
+    @DeleteMapping("/delete/{playerId}")
+    public ResponseEntity<ApiResponse<String>> deletePlayer(@PathVariable Integer playerId) {
+        playerService.deletePlayer(playerId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Player deleted successfully!", null));
+    }
+    @DeleteMapping("/remove/{playerId}/{teamId}")
+    public ResponseEntity<ApiResponse<String>> deletePlayer(@PathVariable Integer playerId,@PathVariable Integer teamId) {
+        playerService.removePlayer(playerId,teamId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Player removed successfully!", null));
+    }
+
     @PostMapping("/retain")
     public ResponseEntity<ApiResponse<String>> retainPlayer(@RequestBody RetainPlayerRequest retainPlayerRequest) {
         playerService.retainPlayer(retainPlayerRequest);

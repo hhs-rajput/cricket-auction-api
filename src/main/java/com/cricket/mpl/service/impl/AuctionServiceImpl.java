@@ -83,10 +83,9 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public AuctionResponseDTO getUserAuction(Integer userId, Integer teamId) {
         AuctionTeam auctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamIdAndAuctionCompleted(userId,teamId,Boolean.FALSE);
-        Auction auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
-        if(auction.getStatus().equals("COMPLETED")) return null;
-
         if (auctionTeam != null) {
+            Auction auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
+            if(auction.getStatus().equals("COMPLETED")) return null;
             auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
             return AuctionResponseDTO.builder()
                     .auctionId(auction.getAuctionId())

@@ -133,6 +133,25 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public void deletePlayer(Integer playerId) {
+        playerRepository.deleteById(playerId);
+    }
+
+    @Override
+    @Transactional
+    public void removePlayer(Integer playerId, Integer teamId) {
+        Player player = playerRepository.findById(playerId).get();
+        int soldPrice = player.getSoldPrice();
+        player.setSold(false);
+        player.setTeamId(null);
+        player.setSoldPrice(0);
+        playerRepository.save(player);
+        AuctionTeam auctionTeam = auctionTeamRepository.findByTeamIdAndAuctionCompleted(teamId, Boolean.FALSE);
+        auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()+soldPrice);
+        auctionTeamRepository.save(auctionTeam);
+    }
+
+    @Override
     @Transactional
     public PlayerSoldDto sellPlayer(Integer playerBidId) {
         PlayerBid playerBid = playerBidRepository.findById(playerBidId).get();
