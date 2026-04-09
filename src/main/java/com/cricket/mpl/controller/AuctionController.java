@@ -80,6 +80,11 @@ public class AuctionController {
         return auctionService.createAuction(auctionRequest);
     }
 
+    @DeleteMapping("/sdfds")
+    public String deleteAuctionTeams(@PathVariable Integer auctionId){
+        return "";
+    }
+
     @PostMapping("/register")
     public String register(@RequestBody AuctionRegisterRequest auctionRegisterRequest){
         return auctionService.register(auctionRegisterRequest);

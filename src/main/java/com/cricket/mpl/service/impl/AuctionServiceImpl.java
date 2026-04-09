@@ -13,7 +13,7 @@ import com.cricket.mpl.service.TeamService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -118,7 +118,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionResponseDTO> getUpcomingAuctions() {
-        List<Auction> all = auctionRepository.findByStatusAndAuctionDateAfter("NOT_STARTED",java.time.LocalDateTime.now(ZoneId.of("Asia/Kolkata")));
+        List<Auction> all = auctionRepository.findByStatusIn(Arrays.asList("NOT_STARTED","STARTED"));
         if(!all.isEmpty()){
             return all.stream().map(auction -> AuctionResponseDTO.builder()
                     .auctionId(auction.getAuctionId())

@@ -2,10 +2,12 @@ package com.cricket.mpl.controller;
 
 import com.cricket.mpl.dto.request.TeamRequest;
 import com.cricket.mpl.dto.response.MyTeamDetailsResponse;
+import com.cricket.mpl.dto.response.TeamAndAuctionResponseDTO;
 import com.cricket.mpl.dto.response.TeamAndCaptionResponseDTO;
 import com.cricket.mpl.dto.response.TeamStatusResponseDTO;
 import com.cricket.mpl.entity.Team;
 import com.cricket.mpl.service.TeamService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +49,23 @@ public class TeamController {
     public List<TeamAndCaptionResponseDTO> getAllTeams() {
         return teamService.getAllTeams();
     }
+
+    @GetMapping("/auctionMappings")
+    public List<TeamAndAuctionResponseDTO> auctionMappings() {
+        return teamService.auctionMappings();
+    }
+
+    @DeleteMapping("/auctionMappings/{auctionTeamId}")
+    public String auctionMappings(@PathVariable Integer auctionTeamId) {
+         return teamService.deleteAuctionMapping(auctionTeamId);
+    }
+
+    @PutMapping("/auctionMappings/{auctionTeamId}/{newPurse}")
+    public String updateTeamAuctionRemainingPurse(@PathVariable Integer auctionTeamId,@PathVariable Integer newPurse) {
+         return teamService.updateTeamAuctionRemainingPurse(auctionTeamId,newPurse);
+    }
+
+
 
     @GetMapping("/status")
     public ResponseEntity<TeamStatusResponseDTO> getTeamStatus(

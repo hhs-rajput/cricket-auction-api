@@ -2,6 +2,7 @@ package com.cricket.mpl.service;
 
 import com.cricket.mpl.dto.request.TeamRequest;
 import com.cricket.mpl.dto.response.MyTeamDetailsResponse;
+import com.cricket.mpl.dto.response.TeamAndAuctionResponseDTO;
 import com.cricket.mpl.dto.response.TeamAndCaptionResponseDTO;
 import com.cricket.mpl.entity.Team;
 
@@ -21,4 +22,10 @@ public interface TeamService {
    MyTeamDetailsResponse myTeamDetails(Integer captionUserId);
 
    List<TeamAndCaptionResponseDTO>  getAllTeams();
+
+   List<TeamAndAuctionResponseDTO> auctionMappings();
+
+   String deleteAuctionMapping(Integer auctionTeamId);
+
+   String updateTeamAuctionRemainingPurse(Integer auctionTeamId, Integer newPurse);
 }
