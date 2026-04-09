@@ -141,6 +141,10 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional
     public void removePlayer(Integer playerId, Integer teamId) {
         Player player = playerRepository.findById(playerId).get();
+        if(player.getCaption()){
+            throw new RuntimeException("You cannot remove caption from the team");
+
+        }
         int soldPrice = player.getSoldPrice();
         player.setSold(false);
         player.setTeamId(null);
