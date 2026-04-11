@@ -168,6 +168,11 @@ public class PlayerBidServiceImpl implements PlayerBidService {
 
     }
 
+    @Override
+    public void deleteAllBids(Integer auctionId) {
+        playerBidRepository.deleteByAuctionId(auctionId);
+    }
+
     private static PlayerBidTransaction getPlayerBidTransaction(PlayerBidRequest playerBidRequest) {
         PlayerBidTransaction playerBidTransaction=new PlayerBidTransaction();
         playerBidTransaction.setBidAmount(playerBidRequest.getBidAmount());

@@ -31,6 +31,12 @@ public class PlayerBidController {
         return "Bid started successfully";
     }
 
+    @DeleteMapping("/delete/{auctionId}")
+    public String deleteAllBids(@PathVariable Integer auctionId) {
+        playerBidService.deleteAllBids(auctionId);
+        return "All bids are delete successfully";
+    }
+
     @PutMapping
     public PlayerBidResponse updateBid(@RequestBody PlayerBidRequest playerBidRequest) {
        return playerBidService.updateBid(playerBidRequest);

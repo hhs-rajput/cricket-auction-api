@@ -14,4 +14,6 @@ public interface PlayerBidService {
     boolean isBiddingOn(Integer auctionId);
 
     void cancelBid(Integer playerBidId);
+
+    void deleteAllBids(Integer auctionId);
 }
