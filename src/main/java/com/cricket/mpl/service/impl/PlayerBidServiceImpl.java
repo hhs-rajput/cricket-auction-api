@@ -1,16 +1,11 @@
 package com.cricket.mpl.service.impl;
 
+import com.cricket.mpl.dto.request.AutoSellSettingsUpdateRequest;
 import com.cricket.mpl.dto.request.PlayerBidRequest;
 import com.cricket.mpl.dto.response.LiveAuctionCurrentPlayerResponseDTO;
 import com.cricket.mpl.dto.response.PlayerBidResponse;
-import com.cricket.mpl.entity.AuctionTeam;
-import com.cricket.mpl.entity.Player;
-import com.cricket.mpl.entity.PlayerBid;
-import com.cricket.mpl.entity.PlayerBidTransaction;
-import com.cricket.mpl.repository.AuctionTeamRepository;
-import com.cricket.mpl.repository.PlayerBidRepository;
-import com.cricket.mpl.repository.PlayerBidTransactionRepository;
-import com.cricket.mpl.repository.PlayerRepository;
+import com.cricket.mpl.entity.*;
+import com.cricket.mpl.repository.*;
 import com.cricket.mpl.service.PlayerBidService;
 import com.cricket.mpl.service.PlayerService;
 import jakarta.transaction.Transactional;
@@ -18,12 +13,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerBidServiceImpl implements PlayerBidService {
+
 
     private final PlayerBidRepository playerBidRepository;
     private final PlayerBidTransactionRepository playerBidTransactionRepository;
@@ -31,15 +30,32 @@ public class PlayerBidServiceImpl implements PlayerBidService {
     private final AuctionTeamRepository auctionTeamRepository;
     private final AuctionWebSocketService auctionWebSocketService;
     private final PlayerService playerService;
+    private final AutoSellSettingsRepository autoSellSettingsRepository;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository, AuctionTeamRepository auctionTeamRepository, AuctionWebSocketService auctionWebSocketService, PlayerService playerService) {
+    public PlayerBidServiceImpl(PlayerBidRepository playerBidRepository, PlayerBidTransactionRepository playerBidTransactionRepository, PlayerRepository playerRepository, AuctionTeamRepository auctionTeamRepository, AuctionWebSocketService auctionWebSocketService, PlayerService playerService, AutoSellSettingsRepository autoSellSettingsRepository) {
         this.playerBidRepository = playerBidRepository;
         this.playerBidTransactionRepository = playerBidTransactionRepository;
         this.playerRepository = playerRepository;
         this.auctionTeamRepository = auctionTeamRepository;
         this.auctionWebSocketService = auctionWebSocketService;
         this.playerService = playerService;
+        this.autoSellSettingsRepository = autoSellSettingsRepository;
+    }
+
+    @Override
+    public void autoSellSettings(AutoSellSettingsUpdateRequest autoSellSettingsUpdateRequest) {
+        List<AutoSaleSettings> autoSaleSettings = autoSellSettingsRepository.findAll();
+        for(AutoSaleSettings a : autoSaleSettings){
+            switch (a.getPlayerCategory()) {
+                case "A" -> a.setSeconds(autoSellSettingsUpdateRequest.getA());
+                case "B" -> a.setSeconds(autoSellSettingsUpdateRequest.getB());
+                case "C" -> a.setSeconds(autoSellSettingsUpdateRequest.getC());
+                case "D" -> a.setSeconds(autoSellSettingsUpdateRequest.getD());
+                default -> a.setSeconds(1000);
+                }
+        }
+        autoSellSettingsRepository.saveAll(autoSaleSettings);
     }
 
     @Override
@@ -99,12 +115,14 @@ public class PlayerBidServiceImpl implements PlayerBidService {
         return responseDTO;
     }
 
-    private static int getAutoSellTimerSeconds(String category) {
+    private int getAutoSellTimerSeconds(String category) {
+        List<AutoSaleSettings> autoSaleSettings = autoSellSettingsRepository.findAll();
+        Map<String, Integer> map = autoSaleSettings.stream().collect(Collectors.toMap(AutoSaleSettings::getPlayerCategory, AutoSaleSettings::getSeconds));
         return switch (category) {
-            case "A" -> 90;
-            case "B" -> 60;
-            case "C" -> 45;
-            case "D" -> 30;
+            case "A" -> map.get("A");
+            case "B" -> map.get("B");
+            case "C" -> map.get("C");
+            case "D" -> map.get("D");
             default -> throw new IllegalArgumentException("Invalid category: " + category);
         };
     }

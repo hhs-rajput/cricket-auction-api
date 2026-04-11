@@ -111,3 +111,8 @@ CREATE TABLE mpl.player_bid (
     CONSTRAINT unique_auction_player UNIQUE (auction_id, player_id),
     CONSTRAINT unique_auction_player_status UNIQUE (auction_id, player_id, status)
 );
+
+create table mpl.auto_sale_settings (
+	player_category VARCHAR(1) not null,
+	seconds INTEGER NOT NULL
+);
