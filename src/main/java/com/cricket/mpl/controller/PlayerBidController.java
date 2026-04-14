@@ -1,5 +1,6 @@
 package com.cricket.mpl.controller;
 
+import com.cricket.mpl.dto.request.AutoSellSettingsUpdateRequest;
 import com.cricket.mpl.dto.request.PlayerBidRequest;
 import com.cricket.mpl.dto.response.ApiResponse;
 import com.cricket.mpl.dto.response.PlayerBidResponse;
@@ -31,10 +32,23 @@ public class PlayerBidController {
         return "Bid started successfully";
     }
 
+    @DeleteMapping("/delete/{auctionId}")
+    public String deleteAllBids(@PathVariable Integer auctionId) {
+        playerBidService.deleteAllBids(auctionId);
+        return "All bids are delete successfully";
+    }
+
     @PutMapping
     public PlayerBidResponse updateBid(@RequestBody PlayerBidRequest playerBidRequest) {
        return playerBidService.updateBid(playerBidRequest);
     }
+
+    @PutMapping("/changeAutoSellSettings")
+    public String  autoSellSettings(@RequestBody AutoSellSettingsUpdateRequest autoSellSettingsUpdateRequest) {
+         playerBidService.autoSellSettings(autoSellSettingsUpdateRequest);
+        return "Settings updated successfully!";
+    }
+
     @GetMapping("/isBidding")
     public ResponseEntity<ApiResponse<Boolean>> isBiddingOn(@RequestParam Integer auctionId) {
         return playerBidService.isBiddingOn(auctionId)?ResponseEntity

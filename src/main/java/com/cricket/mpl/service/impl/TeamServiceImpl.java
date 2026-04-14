@@ -3,19 +3,18 @@ package com.cricket.mpl.service.impl;
 import com.cricket.mpl.dto.request.TeamRequest;
 import com.cricket.mpl.dto.response.MyTeamDetailsResponse;
 import com.cricket.mpl.dto.response.PlayerResponseDto;
+import com.cricket.mpl.dto.response.TeamAndAuctionResponseDTO;
 import com.cricket.mpl.dto.response.TeamAndCaptionResponseDTO;
-import com.cricket.mpl.entity.Player;
-import com.cricket.mpl.entity.Team;
-import com.cricket.mpl.entity.User;
+import com.cricket.mpl.entity.*;
 import com.cricket.mpl.mapper.PlayerMapper;
-import com.cricket.mpl.repository.PlayerRepository;
-import com.cricket.mpl.repository.TeamRepository;
-import com.cricket.mpl.repository.UserRepository;
+import com.cricket.mpl.repository.*;
 import com.cricket.mpl.service.TeamService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,15 +22,19 @@ public class TeamServiceImpl implements TeamService {
 
 
     private final TeamRepository teamRepository;
+    private final AuctionRepository auctionRepository;
     private final PlayerRepository playerRepository;
     private final UserRepository userRepository;
     private final PlayerMapper playerMapper;
+    private final AuctionTeamRepository auctionTeamRepository;
 
-    public TeamServiceImpl(TeamRepository teamRepository, PlayerRepository playerRepository, UserRepository userRepository, PlayerMapper playerMapper) {
+    public TeamServiceImpl(TeamRepository teamRepository, AuctionRepository auctionRepository, PlayerRepository playerRepository, UserRepository userRepository, PlayerMapper playerMapper, AuctionTeamRepository auctionTeamRepository) {
         this.teamRepository = teamRepository;
+        this.auctionRepository = auctionRepository;
         this.playerRepository = playerRepository;
         this.userRepository = userRepository;
         this.playerMapper = playerMapper;
+        this.auctionTeamRepository = auctionTeamRepository;
     }
 
     @Override
@@ -100,6 +103,41 @@ public class TeamServiceImpl implements TeamService {
     public List<TeamAndCaptionResponseDTO> getAllTeams() {
         return getTeamDetailsByTeamStatus("APPROVED");
     }
+
+    @Override
+    public List<TeamAndAuctionResponseDTO> auctionMappings() {
+        List<TeamAndAuctionResponseDTO> responseDTOS=new ArrayList<>();
+        List<Auction> auctions = auctionRepository.findAll();
+        Map<Integer, String> auctionsMap = auctions.stream().collect(Collectors.toMap(Auction::getAuctionId, Auction::getAuctionName));
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findAll();
+        for(AuctionTeam auctionTeam:auctionTeams){
+            TeamAndAuctionResponseDTO teamAndAuctionResponseDTO=new TeamAndAuctionResponseDTO();
+            teamAndAuctionResponseDTO.setAuctionTeamId(auctionTeam.getAuctionTeamId());
+            teamAndAuctionResponseDTO.setTeamName(auctionTeam.getTeamName());
+            teamAndAuctionResponseDTO.setTeamId(auctionTeam.getTeamId());
+            teamAndAuctionResponseDTO.setAuctionId(auctionTeam.getAuctionId());
+            teamAndAuctionResponseDTO.setAuctionName(auctionsMap.get(auctionTeam.getAuctionId()));
+            teamAndAuctionResponseDTO.setRemainingPurse(auctionTeam.getRemainingPurse());
+            teamAndAuctionResponseDTO.setAuctionStatus(auctionTeam.isAuctionCompleted()?"COMPLETED":"IN-PROGRESS");
+            responseDTOS.add(teamAndAuctionResponseDTO);
+        }
+        return responseDTOS;
+    }
+
+    @Override
+    public String deleteAuctionMapping(Integer auctionTeamId) {
+        auctionTeamRepository.deleteById(auctionTeamId);
+        return "Auction Team Deleted Successfully !";
+    }
+
+    @Override
+    public String updateTeamAuctionRemainingPurse(Integer auctionTeamId, Integer newPurse) {
+        AuctionTeam auctionTeam = auctionTeamRepository.findById(auctionTeamId).get();
+        auctionTeam.setRemainingPurse(newPurse);
+        auctionTeamRepository.save(auctionTeam);
+        return "Purse updated successfully !";
+    }
+
     private List<TeamAndCaptionResponseDTO> getTeamDetailsByTeamStatus(String teamStatus) {
         List<Team> submittedTeams = teamRepository.findByTeamStatus(teamStatus);
         List<Integer> captionUserIds = submittedTeams.stream().map(Team::getCaptionUserId).toList();

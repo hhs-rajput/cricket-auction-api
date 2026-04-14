@@ -34,4 +34,7 @@ public class AuctionTeam {
     @Column(name = "remaining_purse")
     private Integer remainingPurse;
 
+    @Column(name = "auction_completed")
+    private boolean auctionCompleted;
+
 }

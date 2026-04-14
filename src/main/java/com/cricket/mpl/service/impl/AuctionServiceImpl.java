@@ -10,8 +10,10 @@ import com.cricket.mpl.repository.AuctionRepository;
 import com.cricket.mpl.repository.AuctionTeamRepository;
 import com.cricket.mpl.service.AuctionService;
 import com.cricket.mpl.service.TeamService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -80,9 +82,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public AuctionResponseDTO getUserAuction(Integer userId, Integer teamId) {
-        AuctionTeam auctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamId(userId,teamId);
-        Auction auction = null;
+        AuctionTeam auctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamIdAndAuctionCompleted(userId,teamId,Boolean.FALSE);
         if (auctionTeam != null) {
+            Auction auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
+            if(auction.getStatus().equals("COMPLETED")) return null;
             auction = auctionRepository.findById(auctionTeam.getAuctionId()).get();
             return AuctionResponseDTO.builder()
                     .auctionId(auction.getAuctionId())
@@ -97,17 +100,25 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    @Transactional
     public AuctionResponseDTO complete(Integer auctionId) {
         Auction auction = auctionRepository.findById(auctionId).get();
         auction.setIsActive(Boolean.FALSE);
         auction.setStatus("COMPLETED");
         auctionRepository.save(auction);
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findByAuctionId(auction.getAuctionId());
+        if(auctionTeams!=null && !auctionTeams.isEmpty()){
+            for(AuctionTeam auctionTeam:auctionTeams){
+                auctionTeam.setAuctionCompleted(Boolean.TRUE);
+            }
+            auctionTeamRepository.saveAll(auctionTeams);
+        }
         return AuctionResponseDTO.builder().auctionId(auction.getAuctionId()).isActive(auction.getIsActive()).build();
     }
 
     @Override
     public List<AuctionResponseDTO> getUpcomingAuctions() {
-        List<Auction> all = auctionRepository.findByStatusAndAuctionDateAfter("NOT_STARTED",java.time.LocalDateTime.now());
+        List<Auction> all = auctionRepository.findByStatusIn(Arrays.asList("NOT_STARTED","STARTED"));
         if(!all.isEmpty()){
             return all.stream().map(auction -> AuctionResponseDTO.builder()
                     .auctionId(auction.getAuctionId())
@@ -122,7 +133,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public String register(AuctionRegisterRequest auctionRegisterRequest) {
-        AuctionTeam existingAuctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamId(auctionRegisterRequest.getCaptionUserId(), auctionRegisterRequest.getTeamId());
+        AuctionTeam existingAuctionTeam = auctionTeamRepository.findByCaptionUserIdAndTeamIdAndAuctionCompleted(auctionRegisterRequest.getCaptionUserId(), auctionRegisterRequest.getTeamId(),Boolean.FALSE);
         if(existingAuctionTeam!=null){
             return "You have already registered for a different auction.";
         }
@@ -158,5 +169,21 @@ public class AuctionServiceImpl implements AuctionService {
         auction.setAutoSale(action.equals("ON"));
         auctionRepository.save(auction);
         return "Auto sale has been set to "+action.equals("ON");
+    }
+
+    @Override
+    public AuctionResponseDTO restart(Integer auctionId) {
+        Auction auction = auctionRepository.findById(auctionId).get();
+        auction.setIsActive(Boolean.TRUE);
+        auction.setStatus("STARTED");
+        auctionRepository.save(auction);
+        List<AuctionTeam> auctionTeams = auctionTeamRepository.findByAuctionId(auction.getAuctionId());
+        if(auctionTeams!=null && !auctionTeams.isEmpty()){
+            for(AuctionTeam auctionTeam:auctionTeams){
+                auctionTeam.setAuctionCompleted(Boolean.FALSE);
+            }
+            auctionTeamRepository.saveAll(auctionTeams);
+        }
+        return AuctionResponseDTO.builder().auctionId(auction.getAuctionId()).isActive(auction.getIsActive()).build();
     }
 }

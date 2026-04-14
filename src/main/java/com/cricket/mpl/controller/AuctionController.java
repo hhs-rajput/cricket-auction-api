@@ -49,7 +49,7 @@ public class AuctionController {
                     new ApiResponse<>(true, "Auction Found", userAuction)
             );
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(false, "No User Auction Found", null));
     }
     @GetMapping("/getActiveAuctions")
@@ -65,13 +65,24 @@ public class AuctionController {
 
     @PutMapping("/complete/{auctionId}")
     public AuctionResponseDTO complete(@PathVariable Integer auctionId) {
-        System.out.println("Received request to start auction");
+        System.out.println("Received request to complete auction");
         return auctionService.complete(auctionId);
+    }
+
+    @PutMapping("/restart/{auctionId}")
+    public AuctionResponseDTO restart(@PathVariable Integer auctionId) {
+        System.out.println("Received request to complete auction");
+        return auctionService.restart(auctionId);
     }
 
     @PostMapping
     public String create(@RequestBody AuctionRequest auctionRequest){
         return auctionService.createAuction(auctionRequest);
+    }
+
+    @DeleteMapping("/sdfds")
+    public String deleteAuctionTeams(@PathVariable Integer auctionId){
+        return "";
     }
 
     @PostMapping("/register")

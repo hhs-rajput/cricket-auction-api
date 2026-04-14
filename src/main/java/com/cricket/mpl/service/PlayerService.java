@@ -34,4 +34,8 @@ public interface PlayerService {
     Object sellPlayer(Integer playerBidId);
 
     PlayerSoldDto sellPlayer(SellPlayerRequest sellPlayerRequest);
+
+    void deletePlayer(Integer playerId);
+
+    void removePlayer(Integer playerId, Integer teamId);
 }

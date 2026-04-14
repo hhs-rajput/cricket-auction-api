@@ -32,9 +32,10 @@ public class PlayerServiceImpl implements PlayerService {
     private final AuctionTeamRepository auctionTeamRepository;
     private final PlayerRetentionRepository playerRetentionRepository;
     private final UserRepository userRepository;
+    private final AuctionRepository auctionRepository;
 
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository, UserRepository userRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, PlayerMapper playerMapper, PlayerBidRepository playerBidRepository, SimpMessagingTemplate messagingTemplate, AuctionTeamRepository auctionTeamRepository, PlayerRetentionRepository playerRetentionRepository, UserRepository userRepository, AuctionRepository auctionRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
         this.playerMapper = playerMapper;
@@ -43,11 +44,12 @@ public class PlayerServiceImpl implements PlayerService {
         this.auctionTeamRepository = auctionTeamRepository;
         this.playerRetentionRepository = playerRetentionRepository;
         this.userRepository = userRepository;
+        this.auctionRepository = auctionRepository;
     }
 
     @Override
     public List<PlayerResponseDto> getAllPlayers() {
-        List<Player> allPlayers = playerRepository.findByAdmin(Boolean.FALSE);
+        List<Player> allPlayers = playerRepository.findAll();
         List<Team> allTeams = teamRepository.findAll();
         Map<Integer, String> teamIdNameMap = null;
         if (!allTeams.isEmpty()) {
@@ -131,6 +133,29 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public void deletePlayer(Integer playerId) {
+        playerRepository.deleteById(playerId);
+    }
+
+    @Override
+    @Transactional
+    public void removePlayer(Integer playerId, Integer teamId) {
+        Player player = playerRepository.findById(playerId).get();
+        if(player.getCaption()){
+            throw new RuntimeException("You cannot remove caption from the team");
+
+        }
+        int soldPrice = player.getSoldPrice();
+        player.setSold(false);
+        player.setTeamId(null);
+        player.setSoldPrice(0);
+        playerRepository.save(player);
+        AuctionTeam auctionTeam = auctionTeamRepository.findByTeamIdAndAuctionCompleted(teamId, Boolean.FALSE);
+        auctionTeam.setRemainingPurse(auctionTeam.getRemainingPurse()+soldPrice);
+        auctionTeamRepository.save(auctionTeam);
+    }
+
+    @Override
     @Transactional
     public PlayerSoldDto sellPlayer(Integer playerBidId) {
         PlayerBid playerBid = playerBidRepository.findById(playerBidId).get();
@@ -165,6 +190,11 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @Transactional
     public void retainPlayer(RetainPlayerRequest retainPlayerRequest) {
+
+        Auction auction = auctionRepository.findById(retainPlayerRequest.getAuctionId()).get();
+        if(auction.getStatus().equals("COMPLETED")) {
+            throw new RuntimeException(auction.getAuctionName()+" is already completed, please register for different auction.");
+        }
         PlayerRetention byAuctionIdAndTeamId = playerRetentionRepository.findByAuctionIdAndTeamIdAndStatus(retainPlayerRequest.getAuctionId(), retainPlayerRequest.getTeamId(),"REVIEW");
         if(byAuctionIdAndTeamId!=null && !byAuctionIdAndTeamId.getStatus().equalsIgnoreCase("rejected")){
             throw new RuntimeException("You cannot retain more than one player for the same auction.");
